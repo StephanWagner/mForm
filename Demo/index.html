@@ -1,0 +1,189 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>mForm Demo</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="author" content="Stephan Wagner" />
+
+<link rel="stylesheet" type="text/css" href="../Source/assets/mForm.css" />
+<link rel="stylesheet" type="text/css" href="../Source/assets/mFormElement-Select.css" />
+
+<script type="text/javascript" src="mootools-core-1.4.5-full-nocompat-yc.js"></script>
+<script type="text/javascript" src="mootools-more-1.4.0.1.js"></script>
+
+<script type="text/javascript" src="../Source/mForm.Core.js"></script>
+<script type="text/javascript" src="../Source/mForm.Element.js"></script>
+<script type="text/javascript" src="../Source/mForm.Element.Select.js"></script>
+<script type="text/javascript" src="../Source/mForm.Submit.js"></script>
+
+<style type="text/css">
+body { font-family:"Lucida Grande", Lucida, Verdana, Arial, sans-serif; font-size:14px; color:#353535; }
+a { color:#406080; }
+h2 { margin-top:40px; }
+table { border:0; border-collapse: collapse; }
+td { padding:8px 0px; }
+td.description { font-size:11px; color:#757575; }
+</style>
+
+</head>
+
+<body>
+
+<div style="width:700px; margin:auto">
+
+<h1>mForm Demo</h1>
+
+<p style="margin-bottom:50px;">
+Have a look at the source code. Copy and adjust the following form elements to your liking:
+</p>
+
+<script type="text/javascript">
+window.addEvent('domready', function() {
+	
+	new mForm.Submit({
+		form: 'example_form',
+		captcha: '9ca6cfd0dab82442ba060c0a3989ba83',
+		onSuccess: function(response) {
+			// action when form has been submitted
+		}
+	});
+	
+});
+</script>
+
+
+<form name="example_form" id="example_form" action="http://www.htmltweaks.com/mForm/SubmitForm">
+
+<table>
+
+<tr>
+	<td style="width:280px;">
+	<input type="text" name="full_name" id="full_name" placeholder="Your Full Name" data-required style="width:250px" />
+	</td>
+	<td class="description">
+	The little red dot in the upper right corner tells you this is a required textfield.
+	</td>
+</tr>
+
+<tr>
+	<td>
+	<input type="text" name="email" id="email" placeholder="Your Email Address" style="width:250px" />
+	</td>
+	<td class="description">
+	Placeholders like "Your Email Address" are cross-browser compatible and will work for all modern and old browsers.
+	</td>
+</tr>
+
+<tr>
+	<td>
+	<select name="sex" id="sex" data-select data-required placeholder="Please select your sex" style="width:250px">
+	<option value="Male">Male</option>
+	<option value="Female">Female</option>
+	</select>
+	</td>
+	<td class="description">
+	Select fields can be styled with css, have a placeholder and can also be set as a required element.
+	</td>
+</tr>
+
+<tr>
+	<td>
+	<select name="country" id="country" data-select="{max: 11}" placeholder="Please select your country" style="width:250px">
+	<optgroup label="Europe">
+	<option value="France">France</option>
+	<option value="Germany">Germany</option>
+	<option value="Netherlands">Netherlands</option>
+	<option value="Spain">Spain</option>
+	<option value="United Kingdom">United Kingdom</option>
+	</optgroup>
+	<optgroup label="North America" data-optgroup-closed>
+	<option value="Canada">Canada</option>
+	<option value="Haiti">Haiti</option>
+	<option value="Jamaica">Jamaica</option>
+	<option value="Mexico">Mexico</option>
+	<option value="United States">United States</option>
+	</optgroup>
+	<optgroup label="South America" data-optgroup-closed>
+	<option value="Argentina">Argentina</option>
+	<option value="Brazil">Brazil</option>
+	<option value="Chile">Chile</option>
+	<option value="Peru">Peru</option>
+	<option value="Venezuela">Venezuela</option>
+	</optgroup>
+	<optgroup label="Asia" data-optgroup-closed>
+	<option value="China">China</option>
+	<option value="India">India</option>
+	<option value="Indonesia">Indonesia</option>
+	<option value="Philippines">Philippines</option>
+	<option value="Thailand">Thailand</option>
+	</optgroup>
+	<optgroup label="Africa" data-optgroup-closed>
+	<option value="Algeria">Algeria</option>
+	<option value="Egypt">Egypt</option>
+	<option value="Ghana">Ghana</option>
+	<option value="Namibia">Namibia</option>
+	<option value="South Africa">South Africa</option>
+	</optgroup>
+	<optgroup label="Oceania" data-optgroup-closed>
+	<option value="Australia">Australia</option>
+	<option value="Fiji">Fiji</option>
+	<option value="New Zealand">New Zealand</option>
+	<option value="Papua New Guinea">Papua New Guinea</option>
+	<option value="Vanuatu">Samoa</option>
+	</optgroup>
+	</select>
+	</td>
+	<td class="description">
+	Select fields also have many new options like a search, or optgroups that can be opened and closed.
+	</td>
+</tr>
+
+<tr>
+	<td>
+	<input type="text" name="subject" id="subject" value="" placeholder="Your Subject" data-required="true" style="width:250px" />
+	</td>
+	<td class="description">
+	This textfield is also required. It won't show the red dot but it will show the error. Submit the form to see what happens.
+	</td>
+</tr>
+
+<tr>
+	<td>
+	<textarea rows="6" name="message" id="message" data-required placeholder="Your Message" style="width:250px"></textarea>
+	</td>
+	<td class="description">
+	You can also submit this form by pressing CONTROL + S.
+	</td>
+</tr>
+
+<tr>
+	<td>
+	<input type="checkbox" name="send_copy" value="1" id="send_copy"><label class="checkbox" for="send_copy">Send a copy to my email address</label>
+	</td>
+	<td class="description">
+	You can style your checkboxes with css. This is currently only availible for webkit browsers (Safari, Chrome).
+	</td>
+</tr>
+
+<tr>
+	<td>
+	<button type="submit" class="button_green" style="width:262px"><div>Send Email</div></button>
+	</td>
+	<td class="description">
+	Your buttons are fully designable with css. Notice the spinner when you send the message, it means your form is busy loading the ajax request. Try to submit the form with some required textfields not filled in to see the error notices.
+	</td>
+</tr>
+
+</table>
+
+</form>
+
+<p style="margin-top:50px;">
+To learn more about mForm, please read the <a href="/mForm/Documentation">documentation</a>.
+</p>
+
+</div>
+
+</body>
+</html>
