@@ -2,6 +2,6 @@ name: mForm
 author: StephanWagner
 category: Forms
 tags: [input, select, element, ajax, submit, validate]
-docs: http://www.htmltweaks.com/mForm/Documentation
-demo: http://www.htmltweaks.com/mForm
+docs: http://htmltweaks.com/mForm/Documentation
+demo: http://htmltweaks.com/mForm
 current: 0.1

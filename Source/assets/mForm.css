@@ -28,6 +28,9 @@ button {
 
 /*** textfield, textarea, checkboxes, select ***/
 
+textarea {
+	font-family:inherit;
+}
 input[type="text"],
 input[type="password"],
 textarea,
@@ -111,7 +114,12 @@ div.select.required.required_hidden:after {
 ::-webkit-input-placeholder {
     color:#b0b0b0;
 }
-input:-moz-placeholder {
+input:-ms-input-placeholder,
+textarea:-ms-input-placeholder {
+	color:#b0b0b0;
+}
+input:-moz-placeholder,
+textarea:-moz-placeholder {
     color:#b0b0b0;
 }
 
@@ -202,6 +210,9 @@ input[type="submit"]:active {
 button:active > *:first-child {
 	position:relative;
 	top:1px;
+}
+x:-o-prefocus, button:active *:first-child {
+	position:static !important;
 }
 button[disabled],
 input[type="button"][disabled],

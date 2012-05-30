@@ -13,7 +13,7 @@ requires:
 
 provides: [mForm.Element]
 
-documentation: http://www.htmltweaks.com/mForm/Documentation
+documentation: http://htmltweaks.com/mForm/Documentation
 ...
 */
 

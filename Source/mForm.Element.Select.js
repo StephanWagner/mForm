@@ -14,11 +14,9 @@ requires:
 
 provides: [mForm.Element.Select]
 
-documentation: http://www.htmltweaks.com/mForm/Documentation/Element_Select
+documentation: http://htmltweaks.com/mForm/Documentation/Element_Select
 ...
 */
- 
-// TODO optgroups wont work in IE6, IE7, IE8
 
 mForm.Element.Select = new Class({
 	
@@ -38,6 +36,7 @@ mForm.Element.Select = new Class({
 		search: 20,						// this many options are neccessary to show the search option (set to true or 0 to always show the search textfield)
 		max: 13,						// maximum options to be shown, others will show when scrolling
 		maxBuffer: 3,					// only if (max + maxBuffer > options) options will be hidden and scrolling will be enabled
+		focusSearch: false,				// automatically sets the focus on the search field when opening the options
 		
 		position: 'bottom',				// position of the options container (can be 'top' to show on top of select field or 'bottom' to drop down)
 		tween: 'height',				// can be 'opacity' (fade effect) or 'height' (dropdown effect) ('height' works only at position 'bottom')
@@ -56,6 +55,9 @@ mForm.Element.Select = new Class({
 		
 		zIndex: 2000					// the zindex of the select field should be high to make sure it will be above all other absolute elements (and for ie7 debugging)
 		
+		// Events
+		// onOpen: function() {},
+		// onClose: function() {}
 	},
 	
 	// initialize
@@ -103,11 +105,11 @@ mForm.Element.Select = new Class({
 		}
 		
 		// save required in global var
-		if (this.options.requiredElements.enabled && this.original.getAttribute(this.options.requiredElements.attribute) != null) {
+		if (this.options.validateElements.enabled && this.original.getAttribute(this.options.validateElements.requiredElements.attribute) != null) {
 			this.required = true;
 			
 			// reset required class if needed
-			this.setRequiredElementClasses(this.original, this.original.value);
+			this.setRequired(this.original);
 		}
 		
 		// set a global usable position var
@@ -285,22 +287,24 @@ mForm.Element.Select = new Class({
 			}
 		}).inject(this.optionsWrapper);
 		
-		// move options in optgroups after optgroups
+		// move options in optgroups next to the optgroup
 		var optgroup_id = 0;
 		this.original.getChildren('optgroup').each(function(el) {
 			optgroup_id++;
 			el.setAttribute('data-optgroup-id', optgroup_id);
 			
+			var el3 = null;
 			el.getChildren().each(function(el2) {
 				el2.setAttribute('data-option-optgroup', 'optgroup' + optgroup_id);
-				el2.inject(el, 'after');
+				el2.inject(el3 ? el3 : el, 'after');
+				el3 = el2;
 			});
 		});
 		
 		// create options
-		this.original.getChildren().each(function(el) {
-			if (el.get('value') != '' && el.get('html') != '') {
-			
+		this.original.getChildren().each(function(el) {	
+			if ((el.get('tag') == 'optgroup' && el.get('label') != '') || (el.get('tag') == 'option' && el.get('value') != '' && el.get('html') != '')) {
+				
 				// create option / optgroup
 				var option = new Element('div', {
 					'class': 'option select_' + (el.get('tag') == 'optgroup' ? 'optgroup' : 'option'),
@@ -348,7 +352,7 @@ mForm.Element.Select = new Class({
 						}
 					}.bind(this)).inject(this.optionsContainer);
 					
-					if (el.getAttribute('selected') != null) {
+					if (el.get('selected')) {
 						option.addClass('option_selected');
 					}
 					option.setAttribute('data-option-value', el.value);
@@ -375,7 +379,7 @@ mForm.Element.Select = new Class({
 		this.dropdown.getElements('*[data-optgroup-closed]').fireEvent('click');
 		
 		// add the remove option button
-		this.selectOption(this.getSelected());
+		this.selectOption(this.getSelected(), false);
 		
 		// set height of options wrapper / container
 		this.optionsWrapper.setStyles({height: (this.optionsAmount.visible * this.dimensions.option.totalHeight)});
@@ -426,6 +430,7 @@ mForm.Element.Select = new Class({
 			this.search = new Element('input', {
 				type: 'text',
 				'class': 'select_search',
+				'data-blocksubmit': true,
 				spellcheck: false,
 				maxlength: 30,
 				placeholder: this.options.placeholderSearch,
@@ -438,7 +443,7 @@ mForm.Element.Select = new Class({
 							this.optionsContainer.getChildren().each(function(el) {
 								if (value != '' && (el.hasClass('select_optgroup') || !pattern.test(el.get('html').replace(/(<([^>]+)>)/ig,"")))) {
 									el.setStyle('display', 'none');
-								} else {
+								} else if(el.hasClass('option_open') || el.hasClass('select_optgroup')) {
 									el.setStyle('display', '');
 								}
 							}.bind(this));
@@ -549,18 +554,16 @@ mForm.Element.Select = new Class({
 		if (this.optionsContainer.getFirst('.option_selected')) {
 			this.optionsContainer.getElements('.option_selected').removeClass('option_selected').removeClass('has_remove_selected');
 			
-			if (this.options.requiredElements.enabled && this.required) {
-				this.setRequiredElementClasses(this.original, this.original.value, true);
-				this.setRequiredElementClasses(this.select, this.original.value, true);
+			if (this.required) {
+				this.setRequired(this.original);
 			}
+			this.original.fireEvent('change');
 		}
 		return this;
 	},
 	
 	// set the wrapper postion to possible position
 	setDropdownPosition: function() {
-		
-		// TODO test when this.options.position == 'top'
 		
 		var select_coordinates = this.select.getCoordinates();
 		var window_dimensions = $(window).getSize();
@@ -693,7 +696,7 @@ mForm.Element.Select = new Class({
 	},
 	
 	// selects the given element or the currently preselected element
-	selectOption: function(option) {
+	selectOption: function(option, fireChangeEvent) {
 		option = $(option) || this.getCurrentPreselected();
 		if (option) {
 			this.selectValue.set('html', option.get('html')).removeClass('select_placeholder');
@@ -707,9 +710,11 @@ mForm.Element.Select = new Class({
 			this.addRemoveSelected(option);
 			this.original.value = option.getAttribute('data-option-value');
 			
-			if (this.options.requiredElements.enabled && this.required) {
-				this.setRequiredElementClasses(this.original, option.getAttribute('data-option-value'), true);
-				this.setRequiredElementClasses(this.select, option.getAttribute('data-option-value'), true);
+			if (this.required) {
+				this.setRequired(this.original);
+			}
+			if(fireChangeEvent != false) {
+				this.original.fireEvent('change');
 			}
 			this.close();
 		}
@@ -791,7 +796,12 @@ mForm.Element.Select = new Class({
 			
 			this.dropdownWrapper.setStyle('display', '');
 			
+			if(this.options.focusSearch) {
+				this.search.focus();
+			}
 			this.setDropdownPosition();
+			
+			this.fireEvent('open');
 			
 			if (this.transition) { this.transition.cancel(); }
 			
@@ -829,6 +839,8 @@ mForm.Element.Select = new Class({
 					display: 'none'
 				});
 			}.bind(this);
+			
+			this.fireEvent('close');
 			
 			if (this.transition) { this.transition.cancel(); }
 			

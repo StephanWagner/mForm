@@ -13,7 +13,7 @@ requires:
 
 provides: [mForm.Submit]
 
-documentation: http://www.htmltweaks.com/mForm/Documentation/Submit
+documentation: http://htmltweaks.com/mForm/Documentation/Submit
 ...
 */
 
@@ -33,14 +33,15 @@ mForm.Submit = new Class({
 		overlay: true, 				// adds a overlay to document when submitting a form to prevent clicks on body	
 			
 		loading: true,				// set loading events to buttons
-		loadingButton: null,		// the button (id or element instance) which shows the loading spinner (defaults to last submit button of the form)
-
+		
 		captcha: '', 				// this value will be sent in a hidden field only when the user made any action in the form
-		timer: 5000,				// after mForm.Submit is initialized you have to wait this long (in ms) to submit the form
+		timer: 0,					// after mForm.Submit is initialized you have to wait this long (in ms) to submit the form
 		
 		validate: true,				// checks if all the field having the requiredClass have an value, if not errors will be shown
 		blinkErrors: true,			// error fields will blink
-		bounceSubmitButton: true,	// the submit button will bounce left to right when validation failed
+		
+		submitButton: null,			// the button (id or element instance) which shows the loading spinner (defaults to last submit button of the form)
+		shakeSubmitButton: true,	// the submit button will shake when validation failed
 		
 		responseError: 0,			// the response value to fire the error event ('any' can be any value except responseSuccess value)
 		responseSuccess: 1 			// the response value to fire the success event ('any' can be any value except responseError value)
@@ -83,6 +84,28 @@ mForm.Submit = new Class({
 			this.captcha(this.options.captcha);
 		}
 		
+		// get the submit-button and add events
+		this.submitButton = $(this.options.submitButton) || this.form.getElements('button[type=submit], input[type=submit]').getLast();
+		
+		var margin_original = this.submitButton.getStyle('marginLeft').toInt() || 0;
+		
+		if(this.submitButton) {
+			this.submitButton.set('tween', {
+				property: 'marginLeft',
+				link: 'cancel',
+				duration: 350,
+				transition: function(p, x) {
+					return Math.asin(Math.sin(p * 4 * Math.PI)) * 2 / Math.PI;      
+				},
+				onStart: function() {
+					this.blockSubmit = true;
+				}.bind(this),
+				onComplete: function() {
+					this.blockSubmit = false;
+					this.submitButton.setStyle('marginLeft', margin_original);
+				}.bind(this)
+			});
+		}
 	},
 	
 	// set timer to block submitting the form
@@ -104,7 +127,7 @@ mForm.Submit = new Class({
 					this.disable(this.options.disableButtons);
 				}
 				if(this.options.loading) {
-					this.startLoading(this.options.loadingButton);
+					this.startLoading(this.submitButton);
 				}
 				if(this.options.overlay) {
 					this.addOverlay();
@@ -117,7 +140,7 @@ mForm.Submit = new Class({
 					this.enable(this.options.disableButtons);
 				}
 				if(this.options.loading) {
-					this.stopLoading(this.options.loadingButton);
+					this.stopLoading(this.options.submitButton);
 				}
 				if(this.options.overlay) {
 					this.removeOverlay();
@@ -153,7 +176,6 @@ mForm.Submit = new Class({
 	// set submit functions
 	setSubmit: function() {
 		this.form.addEvent('submit', function(ev) {
-			// TODO set blockSubmit to false onRequest and to true onComplete, instead of diabling all buttons
 			var submit_form = true;
 			if (this.$events.submit) {
 				this.$events.submit.each(function(fn) {
@@ -163,10 +185,8 @@ mForm.Submit = new Class({
 					return false;
 				}.bind(this));
 			}
-			if (submit_form) {
-				if ((!this.options.validate || this.validate()) && !this.blockSubmit) {
-					this.form[this.options.ajax ? 'send' : 'submit']();
-				}
+			if (submit_form && !this.blockSubmit && (!this.options.validateElements.enabled || this.validate())) {
+				this.form[this.options.ajax ? 'send' : 'submit']();
 			}
 			if (ev) {
 				ev.preventDefault();
@@ -206,60 +226,47 @@ mForm.Submit = new Class({
 	// add validate events
 	validate: function(elements) {
 		
-		// TODO scroll to first visible error if error occured (or send message)
-		// TODO you probably have to check required fields here as they wont trigger when you do el.value = el;
+		var errorElements = [];
 		
-		this.showErrors(this.form.getElements('.required'), this.options.bounceSubmitButton);
-		return this.form.getElements('.required').length > 0 ? false : true;
+		// get required elements
+		this.getElements(elements, this.form.getElements('*[' + this.options.validateElements.attribute + '], *[' + this.options.validateElements.requiredElements.attribute + ']')).each(function(el) {
+			if(!this.validateElement(el)) {
+				errorElements.push(el);
+			}
+		}.bind(this));
+		
+		this.showErrors(errorElements, this.options.shakeSubmitButton);
+		
+		return (errorElements.length > 0) ? false : true;
 	},
 	
 	// show errors
-	showErrors: function(elements, bounceButton) {
+	showErrors: function(elements, shakeButton) {
 		if($(elements)) {
 			elements = Array.from($(elements));
 		}
 		elements = $$(elements);
 		
 		if(elements.length > 0) {
+			
 			this.fireEvent('showErrors', elements);
 			
 			elements.each(function(el) {
-				el.addClass(this.options.requiredElements.errorClass);
+				el.addClass(this.options.validateElements.errorClass);
 				
 				if(this.options.blinkErrors) {
 					var blinkErrors = function(el, fn) {
-						el[fn + 'Class'](this.options.requiredElements.errorClass);
+						el[fn + 'Class'](this.options.validateElements.errorClass);
 					}.bind(this);
-					blinkErrors.delay(50, null, [elements, 'remove']);
-					blinkErrors.delay(150, null, [elements, 'add']);
-					blinkErrors.delay(200, null, [elements, 'remove']);
-					blinkErrors.delay(300, null, [elements, 'add']);
+					
+					[50, 150, 200, 300].each(function(value, index) {
+						blinkErrors.delay(value, null, [elements, index % 2 == 0 ? 'remove' : 'add']);
+					});
 				}
 			}.bind(this));
 			
-			if(bounceButton) {
-				// TODO check submit button on initialize
-				var submit_button = this.form.getElements('button[type=submit], input[type=submit]').getLast();
-				
-				submit_button_fx = new Fx.Tween(submit_button, {
-					duration: 30,
-					transition: 'linear',
-					property: 'marginLeft'
-				});
-				
-				var margin_original = submit_button.getStyle('marginLeft').toInt() || 0;
-				
-				submit_button_fx.start(margin_original, margin_original + 10).chain(function() {
-					submit_button_fx.start(margin_original + 10, margin_original);
-				}).chain(function() {
-					submit_button_fx.start(margin_original, margin_original - 10);
-				}).chain(function() {
-					submit_button_fx.start(margin_original - 10, margin_original);
-				}).chain(function() {
-					submit_button_fx.start(margin_original, margin_original + 10);
-				}).chain(function() {
-					submit_button_fx.start(margin_original + 10, margin_original);
-				});
+			if(shakeButton) {
+				this.submitButton.tween(15);
 			}
 		}
 		return this;

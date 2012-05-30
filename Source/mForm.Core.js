@@ -12,7 +12,7 @@ requires:
 
 provides: [mForm]
 
-documentation: http://www.htmltweaks.com/mForm/Documentation
+documentation: http://htmltweaks.com/mForm/Documentation
 ...
 */
 
@@ -22,33 +22,38 @@ var mForm = new Class({
 
 	options: {
 		
-		submitFormOnControlS: true,					// submits your form when pressing control + s in textareas or input fields
-		submitFormOnEnter: true,					// submits your form when pressing enter in input fields
+		submitFormOnControlS: true,				// submits your form when pressing control + s in textareas or input fields
+		submitFormOnEnter: true,				// submits your form when pressing enter in input fields
 		
-		requiredElements: {							// currently supported for: text-elemets, selects-fields
-			enabled: true,							// false to disable required Elements
-			attribute: 'data-required',				// elements with attribute data-required will be added the required events and classes
-			hide: false,							// set to true to hide the notice that the element is required (you can also set data-required="true" to hide it from a single element)
-			requiredClass: 'required',				// add this class for required fields
-			hiddenRequiredClass: 'required_hidden',	// aditionally add this class if the required notice should be hidden
-			errorClass: 'input_error',				// add this class if the element has no value but is a required element
-			addValidateEvents: false				// the errorClass will be added / removed automatically on blur
+		validateElements: {
+			enabled: true,						// false wont validate any elements
+			attribute: 'data-validate',			// elements with attribute data-validate and with a value will be validated
+			errorClass: 'input_error',			// add this class if the element has no value but is a required element
+			autoValidate: false,				// the errorClass will be added / removed automatically on blur
+			
+			requiredElements: {					// currently supported for: text-elements, select fields
+				attribute: 'data-required',		// elements with attribute data-required will be added the required events and classes
+				hide: false,					// set to true to hide the notice that the element is required (you can also set data-required="true" to hide it from a single element)
+				requiredClass: 'required',		// add this class for required fields (having no value)
+				hiddenRequiredClass:			// aditionally add this class if the required notice should be hidden
+					'required_hidden'
+			}
 		},
 		
 		customPlaceholders: {
-			enabled: true,					// false to disable custom placeholders
-			attribute: 'placeholder', 		// add cross-browser placeholders to input elements with this attribute
-			allBrowsers: false				// sets the custom placeholders even if the browser has its own placeholder function (safari, chrome, firefox > 3.6 etc.)
+			enabled: true,				// false to disable custom placeholders
+			attribute: 'placeholder', 	// add cross-browser placeholders to input elements with this attribute
+			allBrowsers: false			// sets the custom placeholders even if the browser has its own placeholder function (safari, chrome, firefox > 3.6 etc.)
 		},
 		
 		customSelectElements: {
 			enabled: true,
-			attribute: 'data-select'		// select fields with this attribute will be replaced width the custom select field (formElements.Select.js needs to be loaded)
-		},									// you can use options as value (data-select="") see formElements.Select.js for more info
+			attribute: 'data-select'	// select fields with this attribute will be replaced width the custom select field (formElements.Select.js needs to be loaded)
+		},								// you can use options as value (data-select="") see formElements.Select.js for more info
 		
 		customNumberElements:	{
-			enabled: true,					// false to disable custom numer elements
-			attribute: 'data-number'		// textfields with this attribute will only allow numbers to be typed in // TODO 'hours' 'minutes'
+			enabled: true,				// false to disable custom numer elements
+			attribute: 'data-number'	// textfields with this attribute will only allow numbers to be typed in // TODO 'hours' 'minutes'
 		}
 	},
 	
@@ -59,15 +64,12 @@ var mForm = new Class({
 		
 		// all input field types
 		this.textFieldTypes = ['text', 'password', 'date', 'datetime', 'datetime-local', 'email', 'month', 'number', 'search', 'tel', 'time', 'url', 'week'];
-		
-		// initialize events
-		this.reInit();
 	},
 	
 	// re-initialize mForm (e.g. after an ajax call)
 	reInit: function() {
 		// add control + s form submit events
-		if (this.options.submitFormOnControlS) {
+		if (this.options.submitFormOnControlS || this.options.submitFormOnEnter) {
 			this.setSubmitFormEvents();
 		}
 		// add custom placeholders
@@ -75,8 +77,13 @@ var mForm = new Class({
 			this.setPlaceholders();
 		}
 		// set required events (needs to be before any custom element to ensure required classes are added)
-		if (this.options.requiredElements.enabled) {
+		if (this.options.validateElements.enabled) {
 			this.setRequiredElements();
+		}
+		// set required events (needs to be before any custom element to ensure required classes are added)
+		if (this.options.validateElements.enabled) {
+			this.setRequiredElements();
+			this.setValidateElements();
 		}
 		// replace select fields with customly designed select fields
 		if (this.options.customSelectElements.enabled && mForm.Element && mForm.Element.Select) {
@@ -86,6 +93,7 @@ var mForm = new Class({
 		if (this.options.customNumberElements.enabled) {
 			this.setCustomNumberElements();
 		}
+		
 		// fix buttons without type submit to submit the form
 		$$('button').each(function(el) {
 			if (!el.retrieve('buttonFixed') && el.getAttribute('type') != 'submit') {
@@ -94,6 +102,19 @@ var mForm = new Class({
 				}).store('buttonFixed');
 			}
 		});
+		
+		// fix firefox textareas +1 row bug
+		if(Browser.firefox) {
+			$$('textarea[rows]').each(function(el) {
+				if(!el.retrieve('ffRowsFixed')) {
+					var rows = el.get('rows').toInt();
+					if (rows > 1) {
+						el.set('rows', (rows - 1));
+					}
+					el.store('ffRowsFixed', true);
+				}
+			});
+		}
 	},
 	
 	// get options of a attribute
@@ -112,25 +133,28 @@ var mForm = new Class({
 	// add control + s event to textareas and textfields
 	setSubmitFormEvents: function(elements) {
 		this.getElements(elements, $$('textarea, input[type=text], input[type=password], input[type=date], input[type=datetime], input[type=datetime-local], input[type=email], input[type=month], input[type=number], input[type=search], input[type=tel], input[type=time], input[type=url], input[type=week]')).each(function(el) {
-			el.addEvent('keydown', function(ev) {
-				if (el.getParent('form') && (
-					(this.options.submitFormOnControlS && (ev.key == 's' && (ev.control || (Browser.Platform.mac && ev.meta)))) ||
-					(this.options.submitFormOnEnter && ev.key == 'enter' && el.get('tag') != 'textarea'))) {
-					ev.preventDefault();
-					el.blur();
-					if (el.getParent('form').retrieve('events') && el.getParent('form').retrieve('events')['submit']) {
-						el.getParent('form').fireEvent('submit');
-					} else {
-						el.getParent('form').submit();
+			if(!el.getAttribute('data-blocksubmit')) {
+				el.addEvent('keydown', function(ev) {
+					if (el.getParent('form') && (
+						(this.options.submitFormOnControlS && (ev.key == 's' && (ev.control || (Browser.Platform.mac && ev.meta)))) ||
+						(this.options.submitFormOnEnter && ev.key == 'enter' && el.get('tag') != 'textarea'))) {
+						ev.preventDefault();
+						el.blur();
+						if (el.getParent('form').retrieve('events') && el.getParent('form').retrieve('events')['submit']) {
+							el.getParent('form').fireEvent('submit');
+						} else {
+							el.getParent('form').submit();
+						}
 					}
-				}
-			}.bind(this));
+				}.bind(this));
+			}
 		}.bind(this));
 	},
 	
 	// add cross-browser placeholders to input elements
 	setPlaceholders: function(elements) {
-		if (!this.options.customPlaceholders.allBrowsers && ((Browser.firefox && Browser.version >= 3.7) || Browser.safari || Browser.chrome)) {
+		if (!this.options.customPlaceholders.enabled ||
+			(!this.options.customPlaceholders.allBrowsers && ((Browser.firefox && Browser.version >= 3.7) || (Browser.opera && Browser.version >= 11) || Browser.safari || Browser.chrome))) {
 			return false;
 		}
 		this.getElements(elements, $$('*[' + this.options.customPlaceholders.attribute + ']')).each(function(el) {
@@ -212,39 +236,106 @@ var mForm = new Class({
 		}.bind(this));
 	},
 	
-	// set required element classes
-	setRequiredElementClasses: function(el, value, auto_validate) {
-		el = $(el);
-		if (value.length == 0) { 
-			el.addClass(this.options.requiredElements.requiredClass + ((this.options.requiredElements.addValidateEvents && auto_validate) ? ' ' + this.options.requiredElements.errorClass : ''));
-		} else {
-			el.removeClass(this.options.requiredElements.requiredClass).removeClass(this.options.requiredElements.errorClass);
+	// set error classes if needed or remove them
+	setErrorClasses: function(el) {
+		if(el.hasClass(this.options.validateElements.errorClass) && this.validateElement(el)) {
+			el.removeClass(this.options.validateElements.errorClass);
+		} else if (this.options.validateElements.autoValidate && !this.validateElement(el)) {
+			el.addClass(this.options.validateElements.errorClass);
 		}
+	},
+	
+	// add validation events to elements
+	setValidateElements: function(elements) {
+		this.getElements(elements, $$('*[' + this.options.validateElements.attribute + '], *[' + this.options.validateElements.requiredElements.attribute + ']')).each(function(el) {
+			if (!el.retrieve('validateAdded')) {
+				if(el.get('tag') == 'select') {
+					el.addEvent('change', function() {
+						this.setErrorClasses(el);
+					}.bind(this));
+				}
+				el.addEvent('blur', function() {
+					this.setErrorClasses(el);
+				}.bind(this));
+				el.store('validateAdded', true);
+			}
+		}.bind(this));
+	},
+	
+	// validate an element
+	validateElement: function(el, value) {
+		el = $(el);
+		value = value || el.value;
+		
+		if(this.getRequired(el, value)) return false;
+		if(value.length == 0 || el.getAttribute(this.options.validateElements.attribute) == null) return true;
+		
+		var validate = el.getAttribute(this.options.validateElements.attribute).split(':');
+		
+		switch(validate[0]) {
+			case 'email':
+			if(!(/^(?:[a-z0-9!#$%&'*+\/=?^_`{|}~-]\.?){0,63}[a-z0-9!#$%&'*+\/=?^_`{|}~-]@(?:(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)*[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\])$/i).test(value)) {
+				return false;
+			}
+			break;
+			case 'min':
+			var value = validate[2] ? value.clean() : value;
+			var min = validate[1] ? validate[1].toInt() : 0;
+			if(value.length < min) {
+				return false;
+			}
+			break;
+			default:
+			if(el.getAttribute(this.options.validateElements.attribute).length > 3 && !el.getAttribute(this.options.validateElements.attribute).test(value)) {
+				return false;
+			}
+		}
+		return true;
+	},
+	
+	// set required element classes and return true if the element is required
+	setRequired: function(el, value) {
+		el = $(el);
+		value = value || el.value;
+		if(el.getAttribute(this.options.validateElements.requiredElements.attribute) != null) {
+			if (value.clean().length == 0) { 
+				el.addClass(this.options.validateElements.requiredElements.requiredClass);
+				return true;
+			} else {
+				el.removeClass(this.options.validateElements.requiredElements.requiredClass);
+			}
+		}
+		return false;
+	},
+	
+	// get required for better understanding
+	getRequired: function(el, value) {
+		return this.setRequired(el, value);
 	},
 	
 	// add events to required elements
 	setRequiredElements: function(elements) {
-		this.getElements(elements, $$('*[' + this.options.requiredElements.attribute + ']')).each(function(el) {
-			if (el.getAttribute(this.options.requiredElements.attribute) != null) {
+		this.getElements(elements, $$('*[' + this.options.validateElements.requiredElements.attribute + ']')).each(function(el) {
+			if (el.getAttribute(this.options.validateElements.requiredElements.attribute) != null) {
 				if (!el.retrieve('requiredAdded')) {
-					if (el.getAttribute(this.options.requiredElements.attribute) || this.options.requiredElements.hide) {
-						el.addClass(this.options.requiredElements.hiddenRequiredClass);
+					if (el.getAttribute(this.options.validateElements.requiredElements.attribute) || this.options.validateElements.requiredElements.hide) {
+						el.addClass(this.options.validateElements.requiredElements.hiddenRequiredClass);
 					}
 					if (el.get('tag') == 'textarea' || (el.get('tag') == 'input' && this.textFieldTypes.contains(el.get('type')))) {
 						el.addEvent('keyup', function() {
-							this.setRequiredElementClasses(el, el.value, true);
+							this.setRequired(el);
 						}.bind(this));
 					} else if (el.get('tag') == 'select') {
 						el.addEvent('change', function() {
-							this.setRequiredElementClasses(el, el.value, true);
+							this.setRequired(el);
 						}.bind(this));
 					}
 					el.addEvent('blur', function() {
-						this.setRequiredElementClasses(el, el.value, true);
+						this.setRequired(el);
 					}.bind(this));
 					el.store('requiredAdded', true);
 				}
-				this.setRequiredElementClasses(el, el.value);
+				this.setRequired(el);
 			}
 		}.bind(this));
 	},
@@ -291,7 +382,7 @@ var mForm = new Class({
 		
 		parent = $(parent) ? $(parent) : $(document.body);
 		
-		parent.getElements('.' + this.options.requiredElements.errorClass).each(function(el) { el.removeClass(this.options.requiredElements.errorClass); });
+		parent.getElements('.' + this.options.validateElements.errorClass).each(function(el) { el.removeClass(this.options.validateElements.errorClass); }.bind(this));
 		
 		this.setRequiredElements();
 		this.setPlaceholders();
@@ -309,4 +400,5 @@ mForm.customId = 0;
 var form;
 window.addEvent('domready', function() {
 	form = new mForm();
+	form.reInit();
 });

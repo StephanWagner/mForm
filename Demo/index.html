@@ -43,9 +43,11 @@ window.addEvent('domready', function() {
 	
 	new mForm.Submit({
 		form: 'example_form',
-		captcha: '9ca6cfd0dab82442ba060c0a3989ba83',
-		onSuccess: function(response) {
-			// action when form has been submitted
+		onResponseSuccess: function(response) {
+			// action when response value == 1
+		},
+		onResponseError: function(response) {
+			// action when response value == 0
 		}
 	});
 	
@@ -53,7 +55,7 @@ window.addEvent('domready', function() {
 </script>
 
 
-<form name="example_form" id="example_form" action="http://www.htmltweaks.com/mForm/SubmitForm">
+<form name="example_form" id="example_form" action="http://htmltweaks.com/mForm/SubmitForm">
 
 <table>
 
@@ -68,10 +70,10 @@ window.addEvent('domready', function() {
 
 <tr>
 	<td>
-	<input type="text" name="email" id="email" placeholder="Your Email Address" style="width:250px" />
+	<input type="text" name="email" id="email" placeholder="Your Email Address" data-validate="email" style="width:250px" />
 	</td>
 	<td class="description">
-	Placeholders like "Your Email Address" are cross-browser compatible and will work for all modern and old browsers.
+	This text field is not required, but if you type in a wrong email address, you won't be able to submit the form.
 	</td>
 </tr>
 
@@ -141,10 +143,10 @@ window.addEvent('domready', function() {
 
 <tr>
 	<td>
-	<input type="text" name="subject" id="subject" value="" placeholder="Your Subject" data-required="true" style="width:250px" />
+	<input type="text" name="subject" id="subject" value="" placeholder="Your Subject" style="width:250px" />
 	</td>
 	<td class="description">
-	This textfield is also required. It won't show the red dot but it will show the error. Submit the form to see what happens.
+	Placeholders like "Your Subject" are cross-browser compatible and will work for all modern and old browsers. 
 	</td>
 </tr>
 
@@ -162,7 +164,7 @@ window.addEvent('domready', function() {
 	<input type="checkbox" name="send_copy" value="1" id="send_copy"><label class="checkbox" for="send_copy">Send a copy to my email address</label>
 	</td>
 	<td class="description">
-	You can style your checkboxes with css. This is currently only availible for webkit browsers (Safari, Chrome).
+	You can style your checkboxes with css. This is currently only available for webkit browsers (Safari, Chrome).
 	</td>
 </tr>
 
@@ -180,7 +182,7 @@ window.addEvent('domready', function() {
 </form>
 
 <p style="margin-top:50px;">
-To learn more about mForm, please read the <a href="/mForm/Documentation">documentation</a>.
+To learn more about mForm, please read the <a href="http://htmltweaks.com/mForm/Documentation">documentation</a>.
 </p>
 
 </div>
