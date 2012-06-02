@@ -1,4 +1,12 @@
 
+mForm 0.2.5.1                         Jun 2012
+----------------------------------------------
+
+* mForm.Element.Select
+  - bugfix: an error came up when focusSearch was true with no search field to set the focus to
+  - bugfix: options outside of an optgroup didn't show when search was canceled
+  
+
 mForm 0.2.5                           May 2012
 ----------------------------------------------
 

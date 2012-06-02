@@ -457,9 +457,10 @@ mForm.Element.Select = new Class({
 							var value = this.search.value;
 							var pattern = new RegExp(value, "i");
 							this.optionsContainer.getChildren().each(function(el) {
-								if (value != '' && (el.hasClass('select_optgroup') || !pattern.test(el.get('html').replace(/(<([^>]+)>)/ig,"")))) {
+								var el_test = pattern.test(el.get('html').replace(/(<([^>]+)>)/ig,""));
+								if ((value != '' && (el.hasClass('select_optgroup') || !el_test)) || (value == '' && el.hasAttribute('data-option-optgroup') && !el.hasClass('option_open'))) {
 									el.setStyle('display', 'none');
-								} else if(el.hasClass('option_open') || el.hasClass('select_optgroup')) {
+								} else if((value != '' && el_test) || (value == '' && (!el.hasAttribute('data-option-optgroup') || el.hasClass('option_open') || el.hasClass('select_optgroup')))) {
 									el.setStyle('display', '');
 								}
 							}.bind(this));
@@ -814,7 +815,7 @@ mForm.Element.Select = new Class({
 			
 			this.dropdownWrapper.setStyle('display', '');
 			
-			if(this.options.focusSearch) {
+			if(this.options.focusSearch && this.search) {
 				this.search.focus();
 			}
 			this.setDropdownPosition();
