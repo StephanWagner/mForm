@@ -77,14 +77,16 @@ div.select.select_focus {
 	-webkit-box-shadow:0 0 5px #8ccfff, inset 0 0 2px rgba(0, 0, 0, 0.12);
 }
 
-input[type="text"].required,
-input[type="password"].required,
-textarea.required {
+/*** required elements ***/
+
+input[type="text"].input_required,
+input[type="password"].input_required,
+textarea.input_required {
 	background-image:url('images/mForm-Sprites.png');
 	background-position:right -44px;
 	background-repeat:no-repeat;
 }
-div.select.required:after {
+div.select.input_required:after {
 	content:'';
 	display:block;
 	position:absolute;
@@ -94,11 +96,10 @@ div.select.required:after {
 	height:3px;
 	background:url('images/mForm-Sprites.png') -277px -47px no-repeat;
 }
-input[type="text"].required.required_hidden,
-input[type="password"].required.required_hidden,
-textarea.required.required_hidden,
-div.select.required.required_hidden:after {
-	background-image:none;
+input[data-required-hidden],
+textarea[data-required-hidden],
+div.select[data-required-hidden]:after {
+	background-image:none !important;
 }
 
 /*** placeholders ***/
@@ -350,4 +351,15 @@ input[type="submit"].button_yellow:active {
 	border:1px solid #e09100;
 	border-bottom:1px solid #ed9e09;
 	background:#ffb215;
+}
+
+/*** disable text-selcting ***/
+
+.noselect {
+	-webkit-touch-callout:none;
+	-webkit-user-select:none;
+	-khtml-user-select:none;
+	-moz-user-select:none;
+	-ms-user-select:none;
+	user-select:none;
 }

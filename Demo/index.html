@@ -79,9 +79,18 @@ window.addEvent('domready', function() {
 
 <tr>
 	<td>
+	<style type="text/css">
+	.select_male span {
+		color:#3d84cc !important;
+	}
+	.select_female span {
+		color:#fc4090 !important;
+	}
+	</style>
 	<select name="sex" id="sex" data-select data-required placeholder="Please select your sex" style="width:250px">
-	<option value="Male">Male</option>
-	<option value="Female">Female</option>
+	<option value="Female" class="select_female">Female</option>
+	<option value="Male" class="select_male">Male</option>
+	<option value="None">I'm not sure</option>
 	</select>
 	</td>
 	<td class="description">
@@ -91,48 +100,57 @@ window.addEvent('domready', function() {
 
 <tr>
 	<td>
-	<select name="country" id="country" data-select="{max: 11}" placeholder="Please select your country" style="width:250px">
+	<style type="text/css">
+	.country span {
+		background-position: 10px 5px;
+		background-repeat: no-repeat;
+		text-indent: 28px;
+	}
+	.country_FR span { background-image:url('flags/FR.png'); }
+	.country_DE span { background-image:url('flags/DE.png'); }
+	.country_NL span { background-image:url('flags/NL.png'); }
+	.country_ES span { background-image:url('flags/ES.png'); }
+	.country_GB span { background-image:url('flags/GB.png'); }
+	.country_BR span { background-image:url('flags/BR.png'); }
+	.country_CA span { background-image:url('flags/CA.png'); }
+	.country_US span { background-image:url('flags/US.png'); }
+	.country_CN span { background-image:url('flags/CN.png'); }
+	.country_IN span { background-image:url('flags/IN.png'); }
+	.country_ID span { background-image:url('flags/ID.png'); }
+	.country_DZ span { background-image:url('flags/DZ.png'); }
+	.country_EG span { background-image:url('flags/EG.png'); }
+	.country_ZA span { background-image:url('flags/ZA.png'); }
+	.country_AU span { background-image:url('flags/AU.png'); }
+	.country_NZ span { background-image:url('flags/NZ.png'); }
+	.country_PG span { background-image:url('flags/PG.png'); }
+	</style>
+	<select name="country" id="country" data-select="{max: 10}" placeholder="Please select your country" style="width:250px">
 	<optgroup label="Europe">
-	<option value="France">France</option>
-	<option value="Germany">Germany</option>
-	<option value="Netherlands">Netherlands</option>
-	<option value="Spain">Spain</option>
-	<option value="United Kingdom">United Kingdom</option>
+	<option class="country country_FR" value="France">France</option>
+	<option class="country country_DE" value="Germany">Germany</option>
+	<option class="country country_NL" value="Netherlands">Netherlands</option>
+	<option class="country country_ES" value="Spain">Spain</option>
+	<option class="country country_GB" value="United Kingdom">United Kingdom</option>
 	</optgroup>
-	<optgroup label="North America" data-optgroup-closed>
-	<option value="Canada">Canada</option>
-	<option value="Haiti">Haiti</option>
-	<option value="Jamaica">Jamaica</option>
-	<option value="Mexico">Mexico</option>
-	<option value="United States">United States</option>
-	</optgroup>
-	<optgroup label="South America" data-optgroup-closed>
-	<option value="Argentina">Argentina</option>
-	<option value="Brazil">Brazil</option>
-	<option value="Chile">Chile</option>
-	<option value="Peru">Peru</option>
-	<option value="Venezuela">Venezuela</option>
+	<optgroup label="America" data-optgroup-closed>
+	<option class="country country_BR" value="Brazil">Brazil</option>
+	<option class="country country_CA" value="Canada">Canada</option>
+	<option class="country country_US" value="United States">United States</option>
 	</optgroup>
 	<optgroup label="Asia" data-optgroup-closed>
-	<option value="China">China</option>
-	<option value="India">India</option>
-	<option value="Indonesia">Indonesia</option>
-	<option value="Philippines">Philippines</option>
-	<option value="Thailand">Thailand</option>
+	<option class="country country_CN" value="China">China</option>
+	<option class="country country_IN" value="India">India</option>
+	<option class="country country_ID" value="Indonesia">Indonesia</option>
 	</optgroup>
 	<optgroup label="Africa" data-optgroup-closed>
-	<option value="Algeria">Algeria</option>
-	<option value="Egypt">Egypt</option>
-	<option value="Ghana">Ghana</option>
-	<option value="Namibia">Namibia</option>
-	<option value="South Africa">South Africa</option>
+	<option class="country country_DZ" value="Algeria">Algeria</option>
+	<option class="country country_EG" value="Egypt">Egypt</option>
+	<option class="country country_ZA" value="South Africa">South Africa</option>
 	</optgroup>
 	<optgroup label="Oceania" data-optgroup-closed>
-	<option value="Australia">Australia</option>
-	<option value="Fiji">Fiji</option>
-	<option value="New Zealand">New Zealand</option>
-	<option value="Papua New Guinea">Papua New Guinea</option>
-	<option value="Vanuatu">Samoa</option>
+	<option class="country country_AU" value="Australia">Australia</option>
+	<option class="country country_NZ" value="New Zealand">New Zealand</option>
+	<option class="country country_PG" value="Papua New Guinea">Papua New Guinea</option>
 	</optgroup>
 	</select>
 	</td>

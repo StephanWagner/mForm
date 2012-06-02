@@ -1,0 +1,43 @@
+
+mForm 0.2.5                           May 2012
+----------------------------------------------
+
+* mForm.Core
+  - changed: hiding the required marker works now by adding the attribute data-required-hidden
+  - improved: cleaned up the code of unused and obsolete stuff
+  - removed: most attributes can't be set in the options anymore
+
+* mForm.Submit
+  - added: validateOnBlur can be set for a specific form
+  - bugfix: submitFormOnControlS and submitFormOnEnter now work properly
+  
+* mForm.Element.Select
+  - added: a notice will be shown if there are no options to select
+  - added: styles and classes from original options will be set to replacement options
+  - added: you can select a value with this.select(value) from an instance of mForm.Select (thanks to Mebus, www.mijngamepc.nl)
+  - bugfix: IE selected the wrong option when there was an optgroup first
+  - bugfix: resetting a form now will also reset custom select elements
+
+
+mForm 0.2                             May 2012
+----------------------------------------------
+
+* mForm.Core
+  - added: fix for firefox adding an extra row to textareas
+  - added: validation of input elements
+  
+* mForm.Submit
+  - added: new type of captcha: timer
+  - improved: performance for shake-button
+  
+* mForm.Element.Select
+  - added: autoselect for search field: focusSearch (thanks to David)
+  - added: onChange events will fire onSelect and onDeselect (thanks to Laboratik)
+  - bugfix: optgroups will open again correctly when search is canceled (thanks to Timo Henke)
+  - bugfix: optgroups will work in IE7+ now
+  - bugfix: optgroups options are now sorted correctly
+
+
+mForm 0.1                           April 2012
+----------------------------------------------
+* mForm initial Release

@@ -18,24 +18,26 @@ documentation: http://htmltweaks.com/mForm/Documentation/Element_Select
 ...
 */
 
+// TODO an optgroup should be open when the selected value is in it
+
 mForm.Element.Select = new Class({
 	
 	Extends: mForm.Element,
-
+	
 	options: {
 		original: null,					// element id or element reference of the select field to replace
 		
-		placeholder: '',				// placeholder for the select field (will add an option with an empty value if the first element has a value)
+		placeholder: '',				// placeholder for the select field (will add an option with an empty value if the first element of the original select field has a value)
 		placeholderSearch:				// placeholder for the search field
 			'Search...',
 		noSearchResults:				// notice when no search results have been found
 			'No options found...',
-		noOptions:						// TODO: message when a select field has no options to select
+		noOptions:						// notice when a select field has no options to select
 			'There are no options...',
 		
 		search: 20,						// this many options are neccessary to show the search option (set to true or 0 to always show the search textfield)
 		max: 13,						// maximum options to be shown, others will show when scrolling
-		maxBuffer: 3,					// only if (max + maxBuffer > options) options will be hidden and scrolling will be enabled
+		maxBuffer: 3,					// only if (max + maxBuffer > options) the options will be hidden and scrolling will be enabled
 		focusSearch: false,				// automatically sets the focus on the search field when opening the options
 		
 		position: 'bottom',				// position of the options container (can be 'top' to show on top of select field or 'bottom' to drop down)
@@ -44,7 +46,7 @@ mForm.Element.Select = new Class({
 		windowOffset: 10,				// minimal distance of the options container to the window edges
 		
 		scrollSpeed: 100,				// scrolling duration for one option
-		scrollFast: 30,					// scrolling duration for one option when scrolling fast, e.g. klicking on down or up button
+		scrollFast: 30,					// scrolling duration for one option when scrolling fast, e.g. clicking on down or up button
 		scrollWheelSpeed: 30,			// scrolling duration for one option when using the mouse wheel		
 		scrollWheelStep: 3,				// this many options will be scrolled with one step when using the scroll wheel
 		
@@ -78,7 +80,7 @@ mForm.Element.Select = new Class({
 		this.original.removeClass = this.removeClass.bind(this);
 		
 		// use select function for original
-		this.original.select = this.selectFunction.bind(this);
+		this.original.select = this.select.bind(this);
 		
 		// set option placeholder if placeholder is set as an attribute in original select
 		if (this.original.getAttribute('placeholder') && this.original.getAttribute('placeholder').length > 0) {
@@ -99,13 +101,13 @@ mForm.Element.Select = new Class({
 				this.options.removeSelected = false;
 			}
 			// check if first option is a real selected value, if not deselect it
-			if (first_option.get('value') != null && first_option.get('value') != '' && first_option.get('selected')) {
+			if (first_option.get('value') != null && first_option.get('value') != '' && first_option.get('selected') && this.options.placeholder) {
 				this.original.value = '';
 			}
 		}
 		
 		// save required in global var
-		if (this.options.validateElements.enabled && this.original.getAttribute(this.options.validateElements.requiredElements.attribute) != null) {
+		if (this.original.getAttribute('data-required') != null) {
 			this.required = true;
 			
 			// reset required class if needed
@@ -128,19 +130,19 @@ mForm.Element.Select = new Class({
 	// addClass function
 	addClass: function(className) {
 		if (!this.original.hasClass(className)) this.original.className = (this.original.className + ' ' + className).clean();
-		this.select ? this.select.addClass(className) : this.addClasses = className;
+		this.selectContainer ? this.selectContainer.addClass(className) : this.addClasses = className;
 		return this.original;
 	},
 	
 	// removeClass function
 	removeClass: function(className) {
 		this.original.className = this.original.className.replace(new RegExp('(^|\\s)' + className + '(?:\\s|$)'), '$1');
-		this.select.removeClass(className);
+		this.selectContainer ? this.selectContainer.removeClass(className) : '';
 		return this.original;
 	},
 	
 	// select function
-	selectFunction: function(value) {
+	select: function(value) {
 		this.original.value = value;
 		this.selectOption(this.getOption(this.original.value));
 		return this.original;
@@ -148,10 +150,10 @@ mForm.Element.Select = new Class({
 	
 	// construct the select field
 	construct: function() {
-		if (this.select) return false;
+		if (this.selectContainer) return false;
 		
 		// create select field
-		this.select = new Element('div', {
+		this.selectContainer = new Element('div', {
 			'class': 'select ' + (this.original.get('class') || '') + ' ' + (this.addClasses || ''),
 			'id': (this.original.get('id') ? this.original.get('id') + '_replacement' : null),
 			styles: {
@@ -166,6 +168,10 @@ mForm.Element.Select = new Class({
 			}
 		}).inject(this.original, 'after');
 		
+		if(this.original.hasAttribute('data-required-hidden')) {
+			this.selectContainer.setAttribute('data-required-hidden', '');
+		}
+		
 		this.selectValue = new Element('span', {
 			html: this.options.placeholder || '&nbsp;',
 			styles: {
@@ -177,11 +183,11 @@ mForm.Element.Select = new Class({
 				'-o-text-overflow': 'ellipsis',
 				'text-overflow': 'ellipsis'
 			}
-		}).addClass(this.options.placeholder ? 'select_placeholder' : '').inject(this.select);
+		}).addClass(this.options.placeholder ? 'select_placeholder' : '').inject(this.selectContainer);
 		
 		// save constant dimensions in this
 		this.dimensions = {};
-		this.dimensions.select = this.select.getDimensions({computeSize: true});
+		this.dimensions.select = this.selectContainer.getDimensions({computeSize: true});
 		
 		// create selector button
 		this.selector = new Element('div', {
@@ -193,7 +199,7 @@ mForm.Element.Select = new Class({
 				zIndex: (this.zIndex + 3),
 				height: (this.dimensions.select.totalHeight - this.dimensions.select['border-top-width'] - this.dimensions.select['border-bottom-width'])
 			}
-		}).inject(this.select).grab(new Element('div', {'class': 'select_selector_icon'}));
+		}).inject(this.selectContainer).grab(new Element('div', {'class': 'select_selector_icon'}));
 		
 		this.dimensions.selector = this.selector.getDimensions({computeSize: true});
 		
@@ -202,12 +208,13 @@ mForm.Element.Select = new Class({
 		
 		// create container
 		this.container = new Element('div', {
+			'class': 'noselect',
 			styles: this.original.getStyles('position', 'top', 'left', 'bottom', 'right', 'float', 'display', 'marginBottom', 'marginLeft', 'marginTop', 'marginRight')
 		}).setStyles({
 			width: this.dimensions.select.totalWidth,
 			height: this.dimensions.select.totalHeight,
 			zIndex: this.zIndex
-		}).inject(this.select, 'after').grab(this.select);
+		}).inject(this.selectContainer, 'after').grab(this.selectContainer);
 		
 		if (this.container.getStyle('position') == 'static') {
 			this.container.setStyle('position', 'relative');
@@ -307,16 +314,16 @@ mForm.Element.Select = new Class({
 				
 				// create option / optgroup
 				var option = new Element('div', {
-					'class': 'option select_' + (el.get('tag') == 'optgroup' ? 'optgroup' : 'option'),
-					styles: {
+					'class': 'option select_' + (el.get('tag') == 'optgroup' ? 'optgroup' : 'option') + ' ' + (el.get('class') || ''),
+					style: el.get('style')
+				}).setStyles({
 						position: 'relative',
 						whiteSpace: 'nowrap',
 						overflow: 'hidden',
 						'-ms-text-overflow': 'ellipsis',
 						'-o-text-overflow': 'ellipsis',
 						'text-overflow': 'ellipsis'
-					}
-				}).grab(new Element('span', {
+					}).grab(new Element('span', {
 					html: (el.get('tag') == 'optgroup' ? (el.get('label') || el.getAttribute('value')) : el.get('html'))
 				}));
 				
@@ -369,6 +376,15 @@ mForm.Element.Select = new Class({
 			all: this.optionsContainer.getChildren('.select_option, .select_optgroup').length
 		};
 		
+		// add notice if there are no options
+		if (this.optionsAmount.all == 0) {
+			new Element('div', {
+				'class': 'select_search_nooptions',
+				html: this.options.noOptions
+			}).inject(this.optionsWrapper, 'top');
+		}
+		
+		// calculate amounts and dimensions
 		this.optionsAmount.visible = (this.optionsAmount.all <= this.options.max) ? this.optionsAmount.all : ((this.optionsAmount.all - this.options.max <= this.options.maxBuffer) ? this.options.max + (this.optionlist.length - this.options.max) : this.optionsAmount.visible = this.options.max);
 		this.setCurrentOptions();
 
@@ -565,7 +581,7 @@ mForm.Element.Select = new Class({
 	// set the wrapper postion to possible position
 	setDropdownPosition: function() {
 		
-		var select_coordinates = this.select.getCoordinates();
+		var select_coordinates = this.selectContainer.getCoordinates();
 		var window_dimensions = $(window).getSize();
 		var window_scroll_dimensions = $(window).getScrollSize();
 		var window_scroll = $(window).getScroll();
@@ -717,6 +733,8 @@ mForm.Element.Select = new Class({
 				this.original.fireEvent('change');
 			}
 			this.close();
+		} else if(this.removeSelectedButton) {
+			this.removeSelectedButton.fireEvent('click');
 		}
 		return this;
 	},
@@ -788,7 +806,7 @@ mForm.Element.Select = new Class({
 	open: function() {
 		if (!this.isOpen) {
 			this.isOpen = true;
-			this.select.addClass('select_focus');
+			this.selectContainer.addClass('select_focus');
 			this.container.setStyle('zIndex', (this.zIndex + 10));
 			
 			this.attachEvents();
@@ -825,7 +843,7 @@ mForm.Element.Select = new Class({
 	close: function() {
 		if (this.isOpen) {
 			this.isOpen = false;
-			this.select.removeClass('select_focus');
+			this.selectContainer.removeClass('select_focus');
 			this.container.setStyle('zIndex', (this.zIndex + 5));
 			
 			this.detachEvents();

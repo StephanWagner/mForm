@@ -119,7 +119,8 @@ input[type="text"].select_search {
 .select_search_cancel_active:hover {
 	background-position:-179px -3px;
 }
-.select_search_noresults {
+.select_search_noresults,
+.select_search_nooptions {
 	color:#a0a0a0;
 	font-size:11px;
 	line-height:normal;
@@ -159,37 +160,32 @@ input[type="text"].select_search {
 	display:block;
 	cursor:pointer;
 }
-
+.select_option {
+	color:#555555;
+	text-shadow:0 1px 1px #fff;
+}
+.select_optgroup {
+	color:#656565;
+	text-shadow:0 1px 1px #fff;
+}
 .select_option span,
 .select_optgroup span {
 	display:block;
 	padding:3px 9px;
 	margin:1px 0px;
 	font-size:12px;
-	line-height:normal;
 	line-height:15px;
 }
-
 .select_option span {
-	color:#555555;
-	text-shadow:0 1px 1px #fff;
 	border-top:1px solid transparent;
 	border-bottom:1px solid transparent;
 }
 .select_option:hover span {
 	color:#404040;
 	border-color:#c7e7ff;
-	background-color:#f1f9ff;
-	background-image:-webkit-linear-gradient(top,#f9fcff,#f1f9ff);
-	background-image:-moz-linear-gradient(top,#f9fcff,#f1f9ff);
-	background-image:-ms-linear-gradient(top,#f9fcff,#f1f9ff);
-	background-image:-o-linear-gradient(top,#f9fcff,#f1f9ff);
-	background-image:linear-gradient(top,#f9fcff,#f1f9ff);
-	filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr=#f9fcff,EndColorStr=#f1f9ff);
+	background-color:#f1f9ff !important;
 }
 .select_optgroup span {
-	color:#656565;
-	text-shadow:0 1px 1px #fff;
 	border-top:1px solid #e0e0e0;
 	border-bottom:1px solid #e0e0e0;
 	background-color:#f4f4f4;
@@ -229,7 +225,9 @@ input[type="text"].select_search {
 .select_optgroup.optgroup_open:hover .select_optgroup_arrow {
 	background-position:-99px -5px;
 }
-
+*[data-option-optgroup] {
+	text-indent:10px;
+}
 
 /*** selected, preselected options ***/
 
@@ -237,13 +235,7 @@ input[type="text"].select_search {
 	color:#404040;
 	text-shadow:0 1px 1px #fff;
 	border-color:#e0e0e0;
-	background-color:#f8f8f8;
-	background-image:-webkit-linear-gradient(top,#fcfcfc,#f4f4f4);
-	background-image:-moz-linear-gradient(top,#fcfcfc,#f4f4f4);
-	background-image:-ms-linear-gradient(top,#fcfcfc,#f4f4f4);
-	background-image:-o-linear-gradient(top,#fcfcfc,#f4f4f4);
-	background-image:linear-gradient(top,#fcfcfc,#f4f4f4);
-	filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr=#fcfcfc,EndColorStr=#f4f4f4);
+	background-color:#f8f8f8 !important;
 }
 .option_selected .remove_selected {
 	background:url('images/mFormElement-Select-Sprites.png') -198px 1px;
