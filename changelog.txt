@@ -1,4 +1,17 @@
 
+mForm 0.2.6                           Oct 2012
+----------------------------------------------
+
+* mForm.Core
+  - added: give textareas the attribute 'data-submitOnEnter' to submit the form (or go to next line with shift + enter)
+  - bugfix: validation of min and max should now always validate correctly
+  - improved: better CSS structure, used googles CSS guidelines
+
+* mForm.Submit
+  - improved: you can now define the element to shake when validation fails
+  - bugfix: onProgress event fired wrongly the onFailure event instead
+  
+
 mForm 0.2.5.1                         Jun 2012
 ----------------------------------------------
 

@@ -109,7 +109,7 @@ var mForm = new Class({
 							ev.preventDefault();
 						}
 						if ((this.options.submitFormOnControlS && (ev.key == 's' && (ev.control || (Browser.Platform.mac && ev.meta)))) ||
-							(this.options.submitFormOnEnter && ev.key == 'enter' && el.get('tag') != 'textarea')) {
+							(this.options.submitFormOnEnter && ev.key == 'enter' && (el.get('tag') != 'textarea' || (el.get('tag') == 'textarea' && el.getAttribute('data-submitOnEnter') != null && !ev.shift)))) {
 							ev.preventDefault();
 							el.blur();
 							if (el.getParent('form').retrieve('events') && el.getParent('form').retrieve('events')['submit']) {
@@ -223,10 +223,10 @@ var mForm = new Class({
 			return (/^(?:[a-z0-9!#$%&'*+\/=?^_`{|}~-]\.?){0,63}[a-z0-9!#$%&'*+\/=?^_`{|}~-]@(?:(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)*[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\])$/i).test(value);
 			break;
 			case 'min':
-			return !(value.length < (validate[1] ? validate[1].toInt() : 0));
+			return !((validate[2] ? value.length : value.clean().length) < (validate[1] ? validate[1].toInt() : 0));
 			break;
 			case 'max':
-			return !(value.length > (validate[1] ? validate[1].toInt() : 0));
+			return !((validate[2] ? value.length : value.clean().length) > (validate[1] ? validate[1].toInt() : 0));
 			break;
 			default:
 			return el.getAttribute('data-validate').length >= 3 && (el.getAttribute('data-validate')).test(value);

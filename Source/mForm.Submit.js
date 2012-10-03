@@ -41,7 +41,10 @@ mForm.Submit = new Class({
 		validateOnBlur: false,		// true will validate elements of this form when they loose focus (onBlur)
 		validateOnSubmit: true,		// validates the form elements when the form is submitted
 		blinkErrors: true,			// when validation fails, the error-elements will blink
+		
 		shakeSubmitButton: true,	// when validation fails, submitButton will shake
+		shakeElement: null,			// the element to use the shake effect on
+		shakeWidth: 15,				// the width to shake the element
 		
 		responseError: 0,			// the response value to fire the error event ('any' can be any value except responseSuccess value)
 		responseSuccess: 1 			// the response value to fire the success event ('any' can be any value except responseError value)
@@ -134,7 +137,7 @@ mForm.Submit = new Class({
 				this.fireEvent('failure', xhr);
 			}.bind(this),
 			onProgress: function(event, xhr) {
-				this.fireEvent('failure', [event, xhr]);
+				this.fireEvent('progress', [event, xhr]);
 			}.bind(this),
 			onException: function(headerName, value) {
 				this.fireEvent('exception', [headerName, value]);
@@ -168,8 +171,8 @@ mForm.Submit = new Class({
 	// add captcha events
 	captcha: function(captcha) {
 		var captchaEvent = function() {
-			if(!this.captchaEventAdded) {
-				if(!this.form.getFirst('.captchaValue')) {
+			if (!this.captchaEventAdded) {
+				if (!this.form.getFirst('.captchaValue')) {
 					this.captcha = new Element('input', {
 						type: 'hidden',
 						name: 'captcha',
@@ -182,7 +185,7 @@ mForm.Submit = new Class({
 		}.bind(this);
 		
 		this.form.getElements('input, textarea, select, checkbox').each(function(el) {
-			if(!el.retrieve('captchaEventAdded')) {
+			if (!el.retrieve('captchaEventAdded')) {
 				el.addEvents({
 					focus: captchaEvent
 				});
@@ -193,31 +196,33 @@ mForm.Submit = new Class({
 	
 	// add validate events
 	validate: function(elements) {
-		if(!this.options.validateOnSubmit) {
+		if (!this.options.validateOnSubmit) {
 			return true;
 		}
 		var errorElements = [];
 		
 		// get elements to validate
 		this.getElements(elements, this.form.getElements('*[data-validate], *[data-required]')).each(function(el) {
-			if(!this.validateElement(el)) {
+			if (!this.validateElement(el)) {
 				errorElements.push(el);
 			}
 		}.bind(this));
 		
-		this.showErrors(errorElements, this.options.shakeSubmitButton);
+		this.showErrors(errorElements, this.options.shakeSubmitButton, this.options.shakeElement);
 		
 		return (errorElements.length == 0);
 	},
 	
 	// function to show errors
-	showErrors: function(elements, shakeButton) {
-		if($(elements)) {
+	showErrors: function(elements, shakeButton, shakeElement) {
+		if ($(elements)) {
 			elements = Array.from($(elements));
 		}
 		elements = $$(elements);
 		
-		if(elements.length > 0) {
+		shakeElement = $(shakeElement) || this.submitButton;
+		
+		if (elements.length > 0) {
 			this.fireEvent('showErrors', elements);
 			
 			elements.each(function(el) {
@@ -234,11 +239,11 @@ mForm.Submit = new Class({
 				}
 			}.bind(this));
 			
-			if(shakeButton && this.submitButton) {
-				if(!this.submitButtonTweenAdded) {
-					var margin_original = this.submitButton.getStyle('marginLeft').toInt() || 0;
+			if (shakeButton && shakeElement) {
+				if (!shakeElement.retrieve('shakeEffectAdded')) {
+					var margin_original = shakeElement.getStyle('marginLeft').toInt() || 0;
 					
-					this.submitButton.set('tween', {
+					shakeElement.set('tween', {
 						property: 'marginLeft',
 						link: 'cancel',
 						duration: 350,
@@ -250,12 +255,11 @@ mForm.Submit = new Class({
 						}.bind(this),
 						onComplete: function() {
 							this.blockSubmit = false;
-							this.submitButton.setStyle('marginLeft', margin_original);
+							shakeElement.setStyle('marginLeft', margin_original);
 						}.bind(this)
-					});
-					this.submitButtonTweenAdded = true;
+					}).store('shakeEffectAdded');
 				}
-				this.submitButton.tween(15);
+				shakeElement.tween(this.options.shakeWidth);
 			}
 		}
 		return this;
