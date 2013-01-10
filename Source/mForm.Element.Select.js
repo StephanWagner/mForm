@@ -567,14 +567,16 @@ mForm.Element.Select = new Class({
 	},
 	
 	// removes the selected status of the currently selected element
-	removeSelected: function() {
+	removeSelected: function(preventChangeEvent) {
 		if (this.optionsContainer.getFirst('.option_selected')) {
 			this.optionsContainer.getElements('.option_selected').removeClass('option_selected').removeClass('has_remove_selected');
 			
 			if (this.required) {
 				this.setRequired(this.original);
 			}
-			this.original.fireEvent('change');
+			if(preventChangeEvent != true) {
+			    this.original.fireEvent('change');
+			}
 		}
 		return this;
 	},
@@ -717,7 +719,7 @@ mForm.Element.Select = new Class({
 		option = $(option) || this.getCurrentPreselected();
 		if (option) {
 			this.selectValue.set('html', option.get('html')).removeClass('select_placeholder');
-			this.removeSelected();
+			this.removeSelected(true);
 			this.removePreselected();
 			this.preselect(option);
 			option.addClass('option_selected');
