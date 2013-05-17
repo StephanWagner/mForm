@@ -229,7 +229,8 @@ var mForm = new Class({
 			return !((validate[2] ? value.length : value.clean().length) > (validate[1] ? validate[1].toInt() : 0));
 			break;
 			default:
-			return el.getAttribute('data-validate').length >= 3 && (el.getAttribute('data-validate')).test(value);
+			// note: does not support regex modifiers (after the trailing /)
+			return el.getAttribute('data-validate').length >= 3 && (new RegExp(el.getAttribute('data-validate').slice(1,-1))).test(value);
 		}
 		return true;
 	},
