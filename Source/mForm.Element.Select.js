@@ -385,7 +385,7 @@ mForm.Element.Select = new Class({
 		}
 		
 		// calculate amounts and dimensions
-		this.optionsAmount.visible = (this.optionsAmount.all <= this.options.max) ? this.optionsAmount.all : ((this.optionsAmount.all - this.options.max <= this.options.maxBuffer) ? this.options.max + (this.optionlist.length - this.options.max) : this.optionsAmount.visible = this.options.max);
+		this.optionsAmount.visible = (this.optionsAmount.all <= this.options.max) ? this.optionsAmount.all : ((this.optionsAmount.all - this.options.max <= this.options.maxBuffer) ? this.options.max + (this.original.getChildren().length - this.options.max) : this.optionsAmount.visible = this.options.max);
 		this.setCurrentOptions();
 
 		this.dimensions.option = this.optionsContainer.getFirst('.select_option, .select_optgroup') ? this.optionsContainer.getFirst('.select_option').getDimensions({computeSize: true, styles: ['padding', 'border', 'margin']}) : {};
