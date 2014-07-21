@@ -1,7 +1,6 @@
 Notice
 ======
 I'm sorry to inform you, that as of January 2014, I've abandoned the mBox and mForm projects.
-I was waiting for a new version of MooTools, but it seems that the community lost interest in the further development of the framework. Currently, I'm working on jBox and jForm, which are clones from mBox and mForm written in jQuery.
 
 
 mForm
@@ -17,11 +16,6 @@ Some of mForm's features:
 * Cross-browser placeholders
 * Fully styleable select fields
 
-Demo: http://htmltweaks.com/mForm
-
-Docs: http://htmltweaks.com/mForm/Documentation
-
-![Screenshot](http://htmltweaks.com/files/mForm/screenshot.png)
 
 How to use
 ----------
@@ -29,5 +23,3 @@ How to use
 Styling your form elements is straight forward with CSS, just edit /assets/mForm.css to your liking.
 
 All options for your form and form elements are set in mForm.Core.js.
-
-For a full documentation visit http://htmltweaks.com/mForm/Documentation.
