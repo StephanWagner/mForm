@@ -1,6 +1,6 @@
 Notice
 ======
-I'm sorry to inform you, that as of January 2014, I've abandoned the mBox and mForm projects.
+I'm sorry to inform you that I've abandoned the mBox and mForm projects. There won't be any more updates.
 
 
 mForm
