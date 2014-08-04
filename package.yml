@@ -2,4 +2,4 @@ name: mForm
 author: StephanWagner
 category: Forms
 tags: [input, select, element, ajax, submit, validate]
-current: 0.2.7
+current: 0.2.8

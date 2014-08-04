@@ -12,8 +12,6 @@ requires:
  - more/Element.Measure
 
 provides: [mForm.Submit]
-
-documentation: http://htmltweaks.com/mForm/Documentation/Submit
 ...
 */
 

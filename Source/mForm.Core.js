@@ -11,8 +11,6 @@ requires:
  - more/Element.Measure
 
 provides: [mForm]
-
-documentation: http://htmltweaks.com/mForm/Documentation
 ...
 */
 

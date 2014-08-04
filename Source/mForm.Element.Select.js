@@ -13,8 +13,6 @@ requires:
  - more/Element.Measure
 
 provides: [mForm.Element.Select]
-
-documentation: http://htmltweaks.com/mForm/Documentation/Element_Select
 ...
 */
 
