@@ -1,6 +1,6 @@
 Notice
 ======
-I'm sorry to inform you that I've abandoned the mBox and mForm projects. There won't be any more updates.
+I've abandoned this project and moved to jQuery. There won't be any more updates.
 
 
 mForm
