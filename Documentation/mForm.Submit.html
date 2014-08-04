@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>mForm Documentation</title>
+
+<meta charset="utf-8">
+<meta name="author" content="Stephan Wagner">
+
+<link rel="stylesheet" type="text/css" href="assets/default.css">
+</head>
+
+<body>
+
+<div id="content_container">
+<div id="content">
+
+<h1>mForm Documentation</h1>
+
+<div class="highlight_bar inset_navigation">
+<ul>
+<li class=""><a href="mForm.Core.html">mForm.Core</a></li>
+<li class="active"><a href="mForm.Submit.html">mForm.Submit</a></li>
+<li class=""><a href="mForm.Element.Select.html">mForm.Element.Select</a></li>
+</ul>
+</div>
+
+<p>
+This class makes submitting your forms, especially your ajax forms, nicer and easier.
+</p>
+
+<h2>Setup</h2>
+
+<p>
+Create an instance of <tt class="bg">mForm.Submit</tt> and optionally set your options and events:
+</p>
+
+<div class="syntax"><pre class="javascript"><span style="color: #003366; font-weight: bold;">new</span> mForm.<span style="color: #006600;">Submit</span><span style="color: #66cc66;">&#40;</span><span style="color: #66cc66;">&#123;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;form: <span style="color: #3366CC;">'my_form'</span> <span style="color: #009900; font-style: italic;">// The form the functions should be attached to</span>
+&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #009900; font-style: italic;">// Here are your options and events, see below for more info</span>
+<span style="color: #66cc66;">&#125;</span><span style="color: #66cc66;">&#41;</span>;</pre></div>
+<h2>Use ajax</h2>
+
+<p>
+The Option <tt class="bg">ajax</tt> is set to <tt class="bg">true</tt> by default, meaning your form will make an ajax call when submitted.<br>
+You can set it to <tt class="bg">false</tt> to disable ajax:
+</p>
+
+<div class="syntax"><pre class="javascript"><span style="color: #003366; font-weight: bold;">new</span> mForm.<span style="color: #006600;">Submit</span><span style="color: #66cc66;">&#40;</span><span style="color: #66cc66;">&#123;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;form: <span style="color: #3366CC;">'my_form'</span>,
+&nbsp;&nbsp;&nbsp;&nbsp;ajax: <span style="color: #003366; font-weight: bold;">false</span>
+<span style="color: #66cc66;">&#125;</span><span style="color: #66cc66;">&#41;</span>;</pre></div>
+<a name="validation"></a>
+<h2>Validation</h2>
+
+<p>
+Validation works the same way as with <a href="mForm.Core.html#validation">mForm.Core</a>, only that validation happens onSubmit and not onBlur.
+</p>
+
+<p>
+Remember that elements with the attribute <tt class="bg">data-required</tt> will also get validated:
+</p>
+
+<div class="syntax"><pre class="javascript">options <span style="color: #66cc66;">&#123;</span>
+    validateOnSubmit: <span style="color: #003366; font-weight: bold;">true</span>,  <span style="color: #009900; font-style: italic;">// Set to false to disable validation onSubmit</span>
+    blinkErrors: <span style="color: #003366; font-weight: bold;">true</span>,       <span style="color: #009900; font-style: italic;">// When validation failed, the error-elements will blink</span>
+    shakeSubmitButton: <span style="color: #003366; font-weight: bold;">true</span>  <span style="color: #009900; font-style: italic;">// The submit button will shake when validation failed</span>
+<span style="color: #66cc66;">&#125;</span>
+&nbsp;</pre><pre class="html4strict"><span style="color: #009900;"><span style="color: #252525;">&lt;input</span> … <span style="color: #000066;">type</span>=<span style="color: #ff0000;">&quot;text&quot;</span> data-required<span style="color: #252525;">&gt;</span></span>
+<span style="color: #009900;"><span style="color: #252525;">&lt;input</span> … <span style="color: #000066;">type</span>=<span style="color: #ff0000;">&quot;text&quot;</span> data-validate=<span style="color: #ff0000;">&quot;email&quot;</span><span style="color: #252525;">&gt;</span></span>
+<span style="color: #009900;"><span style="color: #252525;">&lt;input</span> … <span style="color: #000066;">type</span>=<span style="color: #ff0000;">&quot;text&quot;</span> data-validate=<span style="color: #ff0000;">&quot;min:6&quot;</span> data-required<span style="color: #252525;">&gt;</span></span>
+<span style="color: #009900;"><span style="color: #252525;">&lt;input</span> … <span style="color: #000066;">type</span>=<span style="color: #ff0000;">&quot;text&quot;</span> data-validate=<span style="color: #ff0000;">&quot;max:12&quot;</span><span style="color: #252525;">&gt;</span></span></pre></div>
+
+<p style="margin-top:15px">
+You can also set <tt class="bg">validateOnBlur</tt> to <tt class="bg">true</tt> in your mForm.Submit instance to also use validation onBlur for the elements of this form only.
+</p>
+
+<p style="margin-top:15px">
+Sometimes you might want to show an error hint to specific elements:
+</p>
+
+<div class="syntax"><pre class="javascript"><span style="color: #003366; font-weight: bold;">var</span> myMForm = <span style="color: #003366; font-weight: bold;">new</span> mForm.<span style="color: #006600;">Submit</span><span style="color: #66cc66;">&#40;</span><span style="color: #66cc66;">&#123;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;form: <span style="color: #3366CC;">'my_form'</span>
+<span style="color: #66cc66;">&#125;</span><span style="color: #66cc66;">&#41;</span>;
+&nbsp;
+myMForm.<span style="color: #006600;">showErrors</span><span style="color: #66cc66;">&#40;</span><span style="color: #66cc66;">&#91;</span>$<span style="color: #66cc66;">&#40;</span><span style="color: #3366CC;">'element_1'</span><span style="color: #66cc66;">&#41;</span>, $<span style="color: #66cc66;">&#40;</span><span style="color: #3366CC;">'element_2'</span><span style="color: #66cc66;">&#41;</span><span style="color: #66cc66;">&#93;</span><span style="color: #66cc66;">&#41;</span>;
+myMForm.<span style="color: #006600;">showErrors</span><span style="color: #66cc66;">&#40;</span><span style="color: #66cc66;">&#91;</span>$<span style="color: #66cc66;">&#40;</span><span style="color: #3366CC;">'element_1'</span><span style="color: #66cc66;">&#41;</span>, $<span style="color: #66cc66;">&#40;</span><span style="color: #3366CC;">'element_2'</span><span style="color: #66cc66;">&#41;</span><span style="color: #66cc66;">&#93;</span>, <span style="color: #003366; font-weight: bold;">true</span><span style="color: #66cc66;">&#41;</span>; <span style="color: #009900; font-style: italic;">// Also bounce the submit button</span></pre></div>
+
+<h2>Events</h2>
+
+<p>
+In addition to the <a href="http://mootools.net/docs/core/Request/Request#Request">MooTools/Request</a> events,
+you can also set following events to <tt>mForm.Submit</tt>:
+</p>
+
+<table style="margin-top:15px;">
+<tr><td style="padding-right:15px;"><tt class="bg">onResponseSuccess</tt></td><td>Fires when the response value is equal to option <tt class="bg">responseSuccess</tt></td></tr>
+<tr><td style="padding-right:15px;"><tt class="bg">onResponseError</tt></td><td>Fires when the response value is equal to option <tt class="bg">responseError</tt></td></tr>
+<tr><td style="padding-right:15px;"><tt class="bg">onShowError</tt></td><td>Fires when an validation error has been found</td></tr>
+</table>
+
+<div class="syntax"><pre class="javascript"><span style="color: #003366; font-weight: bold;">new</span> mForm.<span style="color: #006600;">Submit</span><span style="color: #66cc66;">&#40;</span><span style="color: #66cc66;">&#123;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;form: <span style="color: #3366CC;">'my_form'</span>,
+&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;responseError: <span style="color: #CC0000;">0</span>,   <span style="color: #009900; font-style: italic;">// onResponseError will fire when response == 0</span>
+&nbsp;&nbsp;&nbsp;&nbsp;responseSuccess: <span style="color: #CC0000;">1</span>, <span style="color: #009900; font-style: italic;">// onResponseSuccess will fire when response == 1</span>
+&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;onResponseSuccess: <span style="color: #003366; font-weight: bold;">function</span><span style="color: #66cc66;">&#40;</span>response<span style="color: #66cc66;">&#41;</span> <span style="color: #66cc66;">&#123;</span> <span style="color: #000066;">alert</span><span style="color: #66cc66;">&#40;</span><span style="color: #3366CC;">'Request is successful: '</span> + response<span style="color: #66cc66;">&#41;</span>;               <span style="color: #66cc66;">&#125;</span>,
+&nbsp;&nbsp;&nbsp;&nbsp;onResponseError: <span style="color: #003366; font-weight: bold;">function</span><span style="color: #66cc66;">&#40;</span>response<span style="color: #66cc66;">&#41;</span>   <span style="color: #66cc66;">&#123;</span> <span style="color: #000066;">alert</span><span style="color: #66cc66;">&#40;</span><span style="color: #3366CC;">'Request is not successful: '</span> + response<span style="color: #66cc66;">&#41;</span>;           <span style="color: #66cc66;">&#125;</span>,
+&nbsp;&nbsp;&nbsp;&nbsp;onShowError: <span style="color: #003366; font-weight: bold;">function</span><span style="color: #66cc66;">&#40;</span>elements<span style="color: #66cc66;">&#41;</span>       <span style="color: #66cc66;">&#123;</span> <span style="color: #000066;">alert</span><span style="color: #66cc66;">&#40;</span><span style="color: #3366CC;">'Following elements didn<span style="color: #000099; font-weight: bold;">\'</span>t validate: '</span> + elements<span style="color: #66cc66;">&#41;</span>; <span style="color: #66cc66;">&#125;</span>
+<span style="color: #66cc66;">&#125;</span><span style="color: #66cc66;">&#41;</span>;</pre></div>
+<p>
+You can set the value <tt class="bg">any</tt> for <tt class="bg">responseSuccess</tt> or <tt class="bg">responseError</tt>.
+E.g. setting <tt class="bg">any</tt> for <tt class="bg">responseSuccess</tt> means, any response value which is not equal to <tt class="bg">responseError</tt> will fire <tt class="bg">onResponseError</tt>.
+</p>
+
+<h2>CAPTCHA</h2>
+
+<p>
+Your form can automatically send a CAPTCHA value in a hidden textfield.
+The CAPTCHA value will only be sent if you actually interact with a form element, e.g. focus a textfield, select a checkbox etc.<br>
+</p>
+
+<div class="syntax"><pre class="javascript"><span style="color: #003366; font-weight: bold;">new</span> mForm.<span style="color: #006600;">Submit</span><span style="color: #66cc66;">&#40;</span><span style="color: #66cc66;">&#123;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;form: <span style="color: #3366CC;">'my_form'</span>,
+&nbsp;&nbsp;&nbsp;&nbsp;captcha: <span style="color: #3366CC;">'This is my CAPTCHA value'</span> <span style="color: #009900; font-style: italic;">// This value will be sent once a user interacted with the form</span>
+<span style="color: #66cc66;">&#125;</span><span style="color: #66cc66;">&#41;</span>;</pre></div>
+<p>
+This CAPTCHA solution is not as secure as commonly used ones like
+<a href="http://www.google.com/recaptcha">reCAPTCHA</a>, <a href="http://www.phpcaptcha.org/">Secureimage</a> or similar libraries,
+but i've been using this one on many projects and haven't had a bot submitting my forms yet.
+</p>
+
+<p style="margin-top:15px">
+I recommend using the CAPTCHA option together with your browsers session:
+</p>
+
+<div class="syntax"><pre class="php"><span style="color: #000000; font-weight: bold;">&lt;?php</span>
+<span style="color: #000066;">session_start</span><span style="color: #66cc66;">&#40;</span><span style="color: #66cc66;">&#41;</span>;
+<span style="color: #0000ff;">$_SESSION</span><span style="color: #66cc66;">&#40;</span><span style="color: #ff0000;">'captcha'</span><span style="color: #66cc66;">&#41;</span> = <span style="color: #000066;">md5</span><span style="color: #66cc66;">&#40;</span><span style="color: #000066;">time</span><span style="color: #66cc66;">&#40;</span><span style="color: #66cc66;">&#41;</span> . <span style="color: #000066;">rand</span><span style="color: #66cc66;">&#40;</span><span style="color: #cc66cc;">0</span>, <span style="color: #cc66cc;">10000</span><span style="color: #66cc66;">&#41;</span><span style="color: #66cc66;">&#41;</span>; <span style="color: #808080; font-style: italic;">// CAPTCHA: 9d3f5720c4db442ed4535a9000afae70</span>
+<span style="color: #000000; font-weight: bold;">?&gt;</span>
+&nbsp;</pre><pre class="javascript"><span style="color: #003366; font-weight: bold;">new</span> mForm.<span style="color: #006600;">Submit</span><span style="color: #66cc66;">&#40;</span><span style="color: #66cc66;">&#123;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;form: <span style="color: #3366CC;">'my_form'</span>,
+&nbsp;&nbsp;&nbsp;&nbsp;captcha: <span style="color: #3366CC;">'&lt;?php echo $_SESSION('</span>captcha<span style="color: #3366CC;">'); ?&gt;'</span>
+<span style="color: #66cc66;">&#125;</span><span style="color: #66cc66;">&#41;</span>;</pre></div>
+<p>
+In above example, following hidden field will be added to your form once a user interacts with it:
+</p>
+
+<div class="syntax"><pre class="html4strict"><span style="color: #009900;"><span style="color: #252525;">&lt;input</span> <span style="color: #000066;">type</span>=<span style="color: #ff0000;">&quot;hidden&quot;</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;captcha&quot;</span> <span style="color: #000066;">value</span>=<span style="color: #ff0000;">&quot;9d3f5720c4db442ed4535a9000afae70&quot;</span><span style="color: #252525;">&gt;</span></span></pre></div>
+<p>
+Now you can check with php, if the CAPTCHA has been added and equals the one in your session:
+</p>
+
+<div class="syntax"><pre class="php"><span style="color: #000000; font-weight: bold;">&lt;?php</span>
+<span style="color: #b1b100;">if</span><span style="color: #66cc66;">&#40;</span><span style="color: #0000ff;">$_POST</span><span style="color: #66cc66;">&#91;</span><span style="color: #ff0000;">'captcha'</span><span style="color: #66cc66;">&#93;</span> == <span style="color: #0000ff;">$_SESSION</span><span style="color: #66cc66;">&#91;</span><span style="color: #ff0000;">'captcha'</span><span style="color: #66cc66;">&#93;</span><span style="color: #66cc66;">&#41;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #b1b100;">return</span> <span style="color: #000000; font-weight: bold;">true</span>;
+<span style="color: #b1b100;">else</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #b1b100;">return</span> <span style="color: #000000; font-weight: bold;">false</span>;
+<span style="color: #000000; font-weight: bold;">?&gt;</span></pre></div>
+<p>
+To make your forms even more bot-secure, you can set the option <tt class="bg">timer</tt>:
+</p>
+
+<div class="syntax"><pre class="javascript">timer: <span style="color: #CC0000;">5000</span></pre></div>
+<p>
+Then the form can only be submitted after 5 seconds, once mForm.Submit is initialized.
+</p>
+
+
+
+<h2 id="h2_options">Options</h2>
+
+<p>
+This is the complete list of options you can set for mForm.Submit:
+</p>
+
+<table class="options_table">
+<tr>
+<td class="option">
+<div class=""><pre class="javascript">form: <span style="color: #003366; font-weight: bold;">null</span>,</pre></div></td>
+<td class="description">
+The element id or element reference of the form to use.
+</td>
+</tr>
+
+<tr>
+<td class="option">
+<div class=""><pre class="javascript">ajax: <span style="color: #003366; font-weight: bold;">true</span>,</pre></div></td>
+<td class="description">
+Make an ajax request.<br>
+In addition to the <a href="http://mootools.net/docs/core/Request/Request#Request">MooTools/Request</a> events, you can set the following:<br>
+<tt class="bg">onResponseSuccess: function(response) {}</tt><br>
+<tt class="bg">onResponseError: function(response) {}</tt><br>
+<tt class="bg">onShowError: function(elements) {}</tt>
+</td>
+</tr>
+
+<tr>
+<td class="option">
+<div class=""><pre class="javascript">disableFormOnSubmit: <span style="color: #003366; font-weight: bold;">true</span>,</pre></div></td>
+<td class="description">
+All buttons of the form will be disabled when submitted.
+</td>
+</tr>
+
+<tr>
+<td class="option">
+<div class=""><pre class="javascript">disableButtons: <span style="color: #003366; font-weight: bold;">null</span>,</pre></div></td>
+<td class="description">
+Additional buttons to disable when the form is submitted.
+</td>
+</tr>
+
+<tr>
+<td class="option">
+<div class=""><pre class="javascript">addOverlay: <span style="color: #003366; font-weight: bold;">true</span>,</pre></div></td>
+<td class="description">
+Adds a overlay to the document when submitting the form, to prevent any clicks.	
+</td>
+</tr>
+
+<tr>
+<td class="option">
+<div class=""><pre class="javascript">showLoader: <span style="color: #003366; font-weight: bold;">true</span>,</pre></div></td>
+<td class="description">
+Adds a loading spinner to the submit button.
+</td>
+</tr>
+
+<tr>
+<td class="option">
+<div class=""><pre class="javascript">captcha: <span style="color: #3366CC;">''</span>,</pre></div></td>
+<td class="description">
+This value will be sent in a hidden field only when the user made any action in the form.
+</td>
+</tr>
+
+<tr>
+<td class="option">
+<div class=""><pre class="javascript">timer: <span style="color: #CC0000;">0</span>,</pre></div></td>
+<td class="description">
+Another anti-bot option: If you set this to e.g. 5000, the form will only be ably to be submitted five seconds after mForm.Submit is initialised.
+</td>
+</tr>
+
+<tr>
+<td class="option">
+<div class=""><pre class="javascript">submitButton: <span style="color: #003366; font-weight: bold;">null</span>,</pre></div></td>
+<td class="description">
+The button which shows the loading spinner (defaults to last submit button of the form).
+</td>
+</tr>
+
+<tr>
+<td class="option">
+<div class=""><pre class="javascript">validateOnBlur: <span style="color: #003366; font-weight: bold;">false</span>,</pre></div></td>
+<td class="description">
+Set to true will validate elements of this form when they loose focus (onBlur event).
+</td>
+</tr>
+
+<tr>
+<td class="option">
+<div class=""><pre class="javascript">validateOnSubmit: <span style="color: #003366; font-weight: bold;">true</span>,</pre></div></td>
+<td class="description">
+Validates the form elements when the form is submitted.
+</td>
+</tr>
+
+<tr>
+<td class="option">
+<div class=""><pre class="javascript">blinkErrors: <span style="color: #003366; font-weight: bold;">true</span>,</pre></div></td>
+<td class="description">
+When validation fails, the error-elements will blink.
+</td>
+</tr>
+
+<tr>
+<td class="option">
+<div class=""><pre class="javascript">shakeSubmitButton: <span style="color: #003366; font-weight: bold;">true</span>,</pre></div></td>
+<td class="description">
+When validation fails, submitButton will shake.
+</td>
+</tr>
+
+<tr>
+<td class="option">
+<div class=""><pre class="javascript">responseError: <span style="color: #CC0000;">0</span>,</pre></div></td>
+<td class="description">
+If the response value from the ajax call is 0, <tt class="bg">onResponseError</tt> will be fired.<br>
+Set to 'any', <tt class="bg">onResponseError</tt> will be fired if the response value is not equal to <tt class="bg">responseSuccess</tt>.
+</td>
+</tr>
+
+<tr>
+<td class="option">
+<div class=""><pre class="javascript">responseSuccess: <span style="color: #CC0000;">1</span></pre></div></td>
+<td class="description">
+If the response value from the ajax call is 1, <tt class="bg">onResponseSuccess</tt> will be fired.<br>
+Set to 'any', <tt class="bg">onResponseSuccess</tt> will be fired if the response value is not equal to <tt class="bg">responseError</tt>.
+</td>
+</tr>
+
+</table>
+
+
+</div>
+</div>
+
+</body>
+</html>

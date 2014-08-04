@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>mForm Documentation</title>
+
+<meta charset="utf-8">
+<meta name="author" content="Stephan Wagner">
+
+<link rel="stylesheet" type="text/css" href="assets/default.css">
+</head>
+
+<body>
+
+<div id="content_container">
+<div id="content">
+
+<h1>mForm Documentation</h1>
+
+<div class="highlight_bar inset_navigation">
+<ul>
+<li class="active"><a href="mForm.Core.html">mForm.Core</a></li>
+<li class=""><a href="mForm.Submit.html">mForm.Submit</a></li>
+<li class=""><a href="mForm.Element.Select.html">mForm.Element.Select</a></li>
+</ul>
+</div>
+
+<h2>Installation</h2>
+
+<p>MForm requires a new version of <a href="http://www.mootools.net">MooTools</a> and 
+<a href="http://mootools.net/more/5bc83678c5a8e36b4fb3f592c7b278e2">MooTools More/Element.Measure</a>.<br>
+Include <tt>mForm.Core.js</tt> together with <tt>mForm.css</tt> and you are ready to go.<p>
+
+<ul class="file_list" style="margin:10px 0px 15px 25px">
+<li>MooTools 1.4.4</li>
+<li>MooTools More/Element.Measure</li>
+<li>mForm.Core.js</li>
+<li>assets/mForm.css</li>
+</ul>
+
+<h2>Setup</h2>
+
+<p>
+All options for your form elements are set in <tt class="bg">mForm.Core.js</tt>.
+</p>
+
+<h2>Style</h2>
+
+<p>
+Styling your form elements is straight forward with CSS, just edit <tt class="bg">mForm.css</tt> to your liking.
+</p>
+
+<h2>Submit events</h2>
+
+<p>
+You can set your forms to submit when the user presses <tt class="key">CONTROL</tt> + <tt class="key">S</tt> &nbsp;or&nbsp; <tt class="key">ENTER</tt>:
+</p>
+
+<div class="syntax"><pre class="javascript">options: <span style="color: #66cc66;">&#123;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;submitFormOnControlS: <span style="color: #003366; font-weight: bold;">true</span>, <span style="color: #009900; font-style: italic;">// Works in textfields and textareas</span>
+&nbsp;&nbsp;&nbsp;&nbsp;submitFormOnEnter: <span style="color: #003366; font-weight: bold;">true</span>     <span style="color: #009900; font-style: italic;">// Works in textfields only</span>
+<span style="color: #66cc66;">&#125;</span></pre></div>
+<h2>Required elements</h2>
+
+<p>
+To mark an input field as required, use the attribute <tt class="bg">data-required</tt>:
+</p>
+
+<div class="syntax"><pre class="html4strict"><span style="color: #009900;"><span style="color: #252525;">&lt;input</span> … <span style="color: #000066;">type</span>=<span style="color: #ff0000;">&quot;text&quot;</span> data-required<span style="color: #252525;">&gt;</span></span></pre></div>
+
+<p>
+<tt class="bg">requiredElements</tt> is currently supportet for textfields, textareas and the custom select field.<br>
+You can change the appearance of the red dot in <tt class="bg">/assets/sprites.png</tt>.
+</p>
+
+<p style="margin-top:15px">
+To hide the red dot for a single element, add the attribute <tt class="bg">data-required-hidden</tt>:
+</p>
+
+<div class="syntax"><pre class="html4strict"><span style="color: #009900;"><span style="color: #252525;">&lt;input</span> … <span style="color: #000066;">type</span>=<span style="color: #ff0000;">&quot;text&quot;</span> data-required data-required-hidden<span style="color: #252525;">&gt;</span></span></pre></div>
+<p style="margin-top:15px">
+The attribute <tt class="bg">data-required</tt> is also used for validation. Read more in the next section about validation.
+</p>
+
+<a name="validation"></a>
+<h2>Validation</h2>
+
+<p style="margin-bottom:15px">
+There are two ways to validate your form elements, onBlur and onSubmit:<br>
+onBlur means, the element gets validated when it looses its focus (onBlur event).<br>
+onSubmit means, they get validated when you submit the form (works only with <a href="mForm.Submit.html">mForm.Submit</a> class).
+</p>
+<p>
+To validate elements onBlur, set <tt class="bg">validateOnBlur</tt> to <tt class="bg">true</tt>:
+</p>
+
+<div class="syntax"><pre class="javascript">options <span style="color: #66cc66;">&#123;</span>
+    validateOnBlur: <span style="color: #003366; font-weight: bold;">true</span>
+<span style="color: #66cc66;">&#125;</span>
+&nbsp;</pre><pre class="html4strict"><span style="color: #009900;"><span style="color: #252525;">&lt;input</span> … <span style="color: #000066;">type</span>=<span style="color: #ff0000;">&quot;text&quot;</span> data-required<span style="color: #252525;">&gt;</span></span>
+<span style="color: #009900;"><span style="color: #252525;">&lt;input</span> … <span style="color: #000066;">type</span>=<span style="color: #ff0000;">&quot;text&quot;</span> data-validate=<span style="color: #ff0000;">&quot;email&quot;</span><span style="color: #252525;">&gt;</span></span>
+<span style="color: #009900;"><span style="color: #252525;">&lt;input</span> … <span style="color: #000066;">type</span>=<span style="color: #ff0000;">&quot;text&quot;</span> data-validate=<span style="color: #ff0000;">&quot;min:6&quot;</span> data-required<span style="color: #252525;">&gt;</span></span>
+<span style="color: #009900;"><span style="color: #252525;">&lt;input</span> … <span style="color: #000066;">type</span>=<span style="color: #ff0000;">&quot;text&quot;</span> data-validate=<span style="color: #ff0000;">&quot;max:12&quot;</span><span style="color: #252525;">&gt;</span></span></pre></div>
+
+<p style="margin-bottom:10px">
+Currently you can use following validations:
+</p>
+
+<table>
+<tr><td style="padding-right:10px"><tt class="bg">data-validate="email"</tt></td><td>Valid email</td></tr>
+<tr><td style="padding-right:10px"><tt class="bg">data-validate="min:6"</tt></td><td>A minimum of 6 characters</td></tr>
+<tr><td style="padding-right:10px"><tt class="bg">data-validate="max:12"</tt></td><td>A maximum of 12 characters</td></tr>
+<tr><td style="padding-right:10px"><tt class="bg">data-validate="/(red|blue)/"</tt></td><td>You can also make your own patterns</td></tr>
+</table>
+
+<p style="margin-top:25px">
+To validate your elements when submitting a form, read more in the <a href="mForm.Submit.html#validation">mForm.Submit: Validation</a> section.
+</p>
+
+<h2>Custom placeholders</h2>
+
+<p>
+Your HTML5 placeholders are now cross-browser compatible, just set the attribute <tt class="bg">placeholer</tt>:
+</p>
+
+<div class="syntax"><pre class="html4strict"><span style="color: #009900;"><span style="color: #252525;">&lt;input</span> … <span style="color: #000066;">type</span>=<span style="color: #ff0000;">&quot;text&quot;</span> placeholder=<span style="color: #ff0000;">&quot;My placeholder&quot;</span><span style="color: #252525;">&gt;</span></span></pre></div>
+
+<p style="margin-top:15px">
+Custom placeholders adds a wrapper around the element in old browsers, this can have unexpected results. I advise to check your forms on all common browsers before you go online.
+</p>
+
+
+<h2>Custom select fields</h2>
+
+<p>
+Replace those clumsy browser-default select fields with advanced ones simply by adding <tt class="bg">data-select</tt>:
+</p>
+
+<div class="syntax"><pre class="html4strict"><span style="color: #009900;"><span style="color: #252525;">&lt;select</span> data-select placeholder=<span style="color: #ff0000;">&quot;Please select your country&quot;</span><span style="color: #252525;">&gt;</span></span>
+…
+<span style="color: #009900;"><span style="color: #252525;">&lt;/select&gt;</span></span></pre></div>
+
+<p>
+You need to include <tt>mForm.Element.js</tt> and <tt>mForm.Element.Select.js</tt> to use the custom select fields.<br>
+Read more about this in section <a href="mForm.Element.Select.html">mForm.Element.Select</a>.
+</p>
+
+<h2>Custom number textfields</h2>
+
+<p>
+To prevent a user of typing something else than a real number into a textfield use <tt class="bg">data-number</tt>:
+</p>
+
+<div class="syntax"><pre class="html4strict"><span style="color: #009900;"><span style="color: #252525;">&lt;input</span> … <span style="color: #000066;">type</span>=<span style="color: #ff0000;">&quot;text&quot;</span> data-number<span style="color: #252525;">&gt;</span></span></pre></div>
+
+<h2>Reset a form</h2>
+
+<p>
+To reset a forms, use the function <tt class="bg">reset()</tt> on the global <tt class="bg">form</tt> instance:
+</p>
+
+<div class="syntax"><pre class="javascript">form.<span style="color: #006600;">reset</span><span style="color: #66cc66;">&#40;</span>$<span style="color: #66cc66;">&#40;</span><span style="color: #3366CC;">'myForm'</span><span style="color: #66cc66;">&#41;</span><span style="color: #66cc66;">&#41;</span>;</pre></div>
+<h2>Reinitialize mForm</h2>
+
+<p>
+The events for your form elements are set in <tt>mForm.Core.js</tt> on <tt>domready</tt>.
+When you load new content (e.g. with Ajax), or create new form elements, which use mForm functionalities, you need to reinitialize mForm.<br>
+Use the function <tt class="bg">reInit()</tt> on the global <tt class="bg">form</tt> instance to initialize new form elements:
+</p>
+
+<div class="syntax"><pre class="javascript">form.<span style="color: #006600;">reInit</span><span style="color: #66cc66;">&#40;</span><span style="color: #66cc66;">&#41;</span>;</pre></div>
+
+
+</div>
+</div>
+
+</body>
+</html>

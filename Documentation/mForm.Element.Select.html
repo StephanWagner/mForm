@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>mForm Documentation</title>
+
+<meta charset="utf-8">
+<meta name="author" content="Stephan Wagner">
+
+<link rel="stylesheet" type="text/css" href="assets/default.css">
+<link rel="stylesheet" type="text/css" href="../Source/assets/mForm.css" />
+<link rel="stylesheet" type="text/css" href="../Source/assets/mFormElement-Select.css" />
+
+
+<script src="http://ajax.googleapis.com/ajax/libs/mootools/1.4.1/mootools-yui-compressed.js"></script>
+<script type="text/javascript" src="assets/mootools-more-1.4.0.1.js"></script>
+<script type="text/javascript" src="../Source/mForm.Core.js"></script>
+<script type="text/javascript" src="../Source/mForm.Element.js"></script>
+<script type="text/javascript" src="../Source/mForm.Element.Select.js"></script>
+<script type="text/javascript" src="../Source/mForm.Submit.js"></script>
+</head>
+
+<body>
+
+<div id="content_container">
+<div id="content">
+
+<h1>mForm Documentation</h1>
+
+<div class="highlight_bar inset_navigation">
+<ul>
+<li class=""><a href="mForm.Core.html">mForm.Core</a></li>
+<li class=""><a href="mForm.Submit.html">mForm.Submit</a></li>
+<li class="active"><a href="mForm.Element.Select.html">mForm.Element.Select</a></li>
+</ul>
+</div>
+
+<p>
+Replace your browsers default select field with a more awesome one.
+</p>
+
+<h2>Setup</h2>
+
+<p>In addition to <a href="http://www.mootools.net">MooTools</a> and 
+<a href="http://mootools.net/more/5bc83678c5a8e36b4fb3f592c7b278e2">MooTools More/Element.Measure</a> you need to include following files:<p>
+
+<ul class="file_list" style="margin:10px 0px 15px 25px">
+<li>mForm.Core.js</li>
+<li>mForm.Element.js</li>
+<li>mForm.Element.Select.js</li>
+<li>assets/mFormElementSelect.css</li>
+</ul>
+
+<h2>Replace a select field</h2>
+
+<p>
+Now simply add the attribute <tt class="bg">data-select</tt> to your select fields to replace them with the custom one:
+</p>
+
+<div class="syntax"><pre class="html4strict"><span style="color: #009900;"><span style="color: #252525;">&lt;select</span> data-select&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #009900;"><span style="color: #252525;">&lt;option</span> <span style="color: #000066;">value</span>=<span style="color: #ff0000;">&quot;1&quot;</span><span style="color: #252525;">&gt;</span></span>First option<span style="color: #009900;"><span style="color: #252525;">&lt;/option&gt;</span></span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #009900;"><span style="color: #252525;">&lt;option</span> <span style="color: #000066;">value</span>=<span style="color: #ff0000;">&quot;2&quot;</span><span style="color: #252525;">&gt;</span></span>Second option<span style="color: #009900;"><span style="color: #252525;">&lt;/option&gt;</span></span>
+<span style="color: #009900;"><span style="color: #252525;">&lt;/select&gt;</span></span></pre><select data-select="{autoPosition:false}" style="position:absolute; right:10px; top:10px; width:150px;">
+	<option value="1">First option</option>
+	<option value="2">Second option</option>
+</select></div>
+<p>
+To customize your select field, you can set your options in the attributes value:
+</p>
+
+<div class="syntax"><pre class="html4strict"><span style="color: #009900;"><span style="color: #252525;">&lt;select</span> data-select=<span style="color: #ff0000;">&quot;{max: 5, maxBuffer: 2}&quot;</span><span style="color: #252525;">&gt;</span></span></pre></div>
+<p>
+Alternatively you can also create a new instance of <tt class="bg">mForm.Element.Select</tt>:
+</p>
+
+<div class="syntax"><pre class="javascript"><span style="color: #003366; font-weight: bold;">new</span> mForm.<span style="color: #006600;">Element</span>.<span style="color: #006600;">Select</span><span style="color: #66cc66;">&#40;</span><span style="color: #66cc66;">&#123;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;original: <span style="color: #3366CC;">'mySelectField'</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #009900; font-style: italic;">// See section options for more info</span>
+<span style="color: #66cc66;">&#125;</span><span style="color: #66cc66;">&#41;</span>;
+&nbsp;</pre><pre class="html4strict"><span style="color: #009900;"><span style="color: #252525;">&lt;select</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;mySelectField&quot;</span><span style="color: #252525;">&gt;</span></span>
+…
+<span style="color: #009900;"><span style="color: #252525;">&lt;/select&gt;</span></span></pre></div>
+<h2>Search your options</h2>
+
+<p>
+Your custom select fields have a search field by default. It will only show if there are more than 20 options.<br>
+You can change the amount of options, when the search field should be shown:
+</p>
+
+<div class="syntax"><pre class="html4strict"><span style="color: #009900;"><span style="color: #252525;">&lt;select</span> data-select=<span style="color: #ff0000;">&quot;{search: 10}&quot;</span><span style="color: #252525;">&gt;</span></span>
+…
+<span style="color: #009900;"><span style="color: #252525;">&lt;/select&gt;</span></span></pre><select data-select="{autoPosition:false, search: 10}" style="position:absolute; right:10px; top:10px; width:150px;">
+	<option value="1">First option</option>
+	<option value="2">Second option</option>
+	<option value="3">Third option</option>
+	<option value="4">4th option</option>
+	<option value="5">5th option</option>
+	<option value="6">6th option</option>
+	<option value="7">7th option</option>
+	<option value="8">8th option</option>
+	<option value="9">9th option</option>
+	<option value="10">10th option</option>
+	<option value="11">11th option</option>
+</select></div>
+<p>
+Set <tt class="bg">search</tt> to <tt class="bg">true</tt> to always display the search field, or <tt class="bg">false</tt> to disable searching.
+</p>
+
+<h2>Add a placeholder</h2>
+
+<p>
+The HTML5 attribute <tt class="bg">placeholder</tt> also adds a placeholder to your custom select fields:
+</p>
+
+<div class="syntax"><pre class="html4strict"><span style="color: #009900;"><span style="color: #252525;">&lt;select</span> data-select placeholder=<span style="color: #ff0000;">&quot;Please select something&quot;</span><span style="color: #252525;">&gt;</span></span>
+…
+<span style="color: #009900;"><span style="color: #252525;">&lt;/select&gt;</span></span></pre><select data-select="{autoPosition:false, placeholder: 'Please select something'}" style="position:absolute; right:10px; top:10px; width:200px;">
+	<option value="1">First option</option>
+	<option value="2">Second option</option>
+</select></div>
+<p>
+If the first option in your select field has an empty value, it will be used as placeholder:
+</p>
+
+<div class="syntax"><pre class="html4strict"><span style="color: #009900;"><span style="color: #252525;">&lt;select</span> data-select&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #009900;"><span style="color: #252525;">&lt;option</span> <span style="color: #000066;">value</span>=<span style="color: #ff0000;">&quot;&quot;</span><span style="color: #252525;">&gt;</span></span>This is my placeholder<span style="color: #009900;"><span style="color: #252525;">&lt;/option&gt;</span></span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #009900;"><span style="color: #252525;">&lt;option</span> <span style="color: #000066;">value</span>=<span style="color: #ff0000;">&quot;1&quot;</span><span style="color: #252525;">&gt;</span></span>First option<span style="color: #009900;"><span style="color: #252525;">&lt;/option&gt;</span></span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #009900;"><span style="color: #252525;">&lt;option</span> <span style="color: #000066;">value</span>=<span style="color: #ff0000;">&quot;2&quot;</span><span style="color: #252525;">&gt;</span></span>Second option<span style="color: #009900;"><span style="color: #252525;">&lt;/option&gt;</span></span>
+<span style="color: #009900;"><span style="color: #252525;">&lt;/select&gt;</span></span></pre><select data-select="{autoPosition:false}" style="position:absolute; right:10px; top:10px; width:200px;">
+	<option value="">This is my placeholder</option>
+	<option value="1">First option</option>
+	<option value="2">Second option</option>
+</select></div>
+<h2>Deselect an option</h2>
+
+<p>
+By default you can deselect the selected option if there is a placeholder to show instead.<br>
+To disallow this, simply set <tt class="bg">removeSelected</tt> to false.
+</p>
+
+<div class="syntax"><pre class="html4strict"><span style="color: #009900;"><span style="color: #252525;">&lt;select</span> data-select=<span style="color: #ff0000;">&quot;{removeSelected: false}&quot;</span><span style="color: #252525;">&gt;</span></span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #009900;"><span style="color: #252525;">&lt;option</span> <span style="color: #000066;">value</span>=<span style="color: #ff0000;">&quot;&quot;</span><span style="color: #252525;">&gt;</span></span>Try to deselect an option<span style="color: #009900;"><span style="color: #252525;">&lt;/option&gt;</span></span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #009900;"><span style="color: #252525;">&lt;option</span> <span style="color: #000066;">value</span>=<span style="color: #ff0000;">&quot;1&quot;</span><span style="color: #252525;">&gt;</span></span>First option<span style="color: #009900;"><span style="color: #252525;">&lt;/option&gt;</span></span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #009900;"><span style="color: #252525;">&lt;option</span> <span style="color: #000066;">value</span>=<span style="color: #ff0000;">&quot;2&quot;</span><span style="color: #252525;">&gt;</span></span>Second option<span style="color: #009900;"><span style="color: #252525;">&lt;/option&gt;</span></span>
+<span style="color: #009900;"><span style="color: #252525;">&lt;/select&gt;</span></span></pre><select data-select="{autoPosition:false, removeSelected: false}" style="position:absolute; right:10px; top:10px; width:200px;">
+	<option value="">Try to deselect an option</option>
+	<option value="1">First option</option>
+	<option value="2">Second option</option>
+</select></div>
+<h2>Group your options</h2>
+
+<p>
+Wrap your options in an <tt class="bg">optgroup</tt> to group them:
+</p>
+
+<div class="syntax"><pre class="html4strict"><span style="color: #009900;"><span style="color: #252525;">&lt;select</span> data-select&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #009900;"><span style="color: #252525;">&lt;optgroup</span> <span style="color: #000066;">label</span>=<span style="color: #ff0000;">&quot;First group&quot;</span><span style="color: #252525;">&gt;</span></span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #009900;"><span style="color: #252525;">&lt;option</span> <span style="color: #000066;">value</span>=<span style="color: #ff0000;">&quot;1&quot;</span><span style="color: #252525;">&gt;</span></span>First option<span style="color: #009900;"><span style="color: #252525;">&lt;/option&gt;</span></span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #009900;"><span style="color: #252525;">&lt;option</span> <span style="color: #000066;">value</span>=<span style="color: #ff0000;">&quot;2&quot;</span><span style="color: #252525;">&gt;</span></span>Second option<span style="color: #009900;"><span style="color: #252525;">&lt;/option&gt;</span></span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #009900;"><span style="color: #252525;">&lt;/optgroup&gt;</span></span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #009900;"><span style="color: #252525;">&lt;optgroup</span> <span style="color: #000066;">label</span>=<span style="color: #ff0000;">&quot;Second group&quot;</span><span style="color: #252525;">&gt;</span></span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #009900;"><span style="color: #252525;">&lt;option</span> <span style="color: #000066;">value</span>=<span style="color: #ff0000;">&quot;3&quot;</span><span style="color: #252525;">&gt;</span></span>Third option<span style="color: #009900;"><span style="color: #252525;">&lt;/option&gt;</span></span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #009900;"><span style="color: #252525;">&lt;option</span> <span style="color: #000066;">value</span>=<span style="color: #ff0000;">&quot;4&quot;</span><span style="color: #252525;">&gt;</span></span>Fourth option<span style="color: #009900;"><span style="color: #252525;">&lt;/option&gt;</span></span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #009900;"><span style="color: #252525;">&lt;/optgroup&gt;</span></span>
+<span style="color: #009900;"><span style="color: #252525;">&lt;/select&gt;</span></span></pre><select data-select="{autoPosition:false}" style="position:absolute; right:10px; top:10px; width:200px;">
+	<optgroup label="First group">
+		<option value="1">First option</option>
+		<option value="2">Second option</option>
+	</optgroup>
+	<optgroup label="Second group">
+		<option value="3">Third option</option>
+		<option value="4">Fourth option</option>
+	</optgroup>
+</select></div>
+<p>
+Your optgroups are open by default. Use <tt class="bg">data-optgroup-closed</tt> to have an optgroup closed by default.
+</p>
+
+<div class="syntax"><pre class="html4strict"><span style="color: #009900;"><span style="color: #252525;">&lt;select</span> data-select&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #009900;"><span style="color: #252525;">&lt;optgroup</span> <span style="color: #000066;">label</span>=<span style="color: #ff0000;">&quot;This group id closed&quot;</span> data-optgroup-closed&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #009900;"><span style="color: #252525;">&lt;option</span> <span style="color: #000066;">value</span>=<span style="color: #ff0000;">&quot;1&quot;</span><span style="color: #252525;">&gt;</span></span>First option<span style="color: #009900;"><span style="color: #252525;">&lt;/option&gt;</span></span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #009900;"><span style="color: #252525;">&lt;option</span> <span style="color: #000066;">value</span>=<span style="color: #ff0000;">&quot;2&quot;</span><span style="color: #252525;">&gt;</span></span>Second option<span style="color: #009900;"><span style="color: #252525;">&lt;/option&gt;</span></span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #009900;"><span style="color: #252525;">&lt;/optgroup&gt;</span></span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #009900;"><span style="color: #252525;">&lt;optgroup</span> <span style="color: #000066;">label</span>=<span style="color: #ff0000;">&quot;This group is open&quot;</span><span style="color: #252525;">&gt;</span></span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #009900;"><span style="color: #252525;">&lt;option</span> <span style="color: #000066;">value</span>=<span style="color: #ff0000;">&quot;3&quot;</span><span style="color: #252525;">&gt;</span></span>Third option<span style="color: #009900;"><span style="color: #252525;">&lt;/option&gt;</span></span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #009900;"><span style="color: #252525;">&lt;option</span> <span style="color: #000066;">value</span>=<span style="color: #ff0000;">&quot;4&quot;</span><span style="color: #252525;">&gt;</span></span>Fourth option<span style="color: #009900;"><span style="color: #252525;">&lt;/option&gt;</span></span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #009900;"><span style="color: #252525;">&lt;/optgroup&gt;</span></span>
+<span style="color: #009900;"><span style="color: #252525;">&lt;/select&gt;</span></span></pre><select data-select="{autoPosition:false}" style="position:absolute; right:10px; top:10px; width:200px;">
+	<optgroup label="This group id closed" data-optgroup-closed>
+		<option value="1">First option</option>
+		<option value="2">Second option</option>
+	</optgroup>
+	<optgroup label="This group is open">
+		<option value="3">Third option</option>
+		<option value="4">Fourth option</option>
+	</optgroup>
+</select></div>
+<h2>Style your options</h2>
+
+<p>
+You can use <tt class="bg">class</tt> and <tt class="bg">style</tt> to style your options:
+</p>
+
+<div class="syntax"><pre class="css">&lt;style type=<span style="color: #ff0000;">&quot;text/css&quot;</span>&gt;
+<span style="color: #6666ff;">.country</span> span <span style="color: #66cc66;">&#123;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #333;">background-position</span>: <span style="color: #933;">10px</span> <span style="color: #933;">5px</span>;
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #333;">background-repeat</span>: <span style="color: #993333;">no-repeat</span>;
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #333;">text-indent</span>: <span style="color: #933;">28px</span>;
+<span style="color: #66cc66;">&#125;</span>
+<span style="color: #6666ff;">.country_US</span> span <span style="color: #66cc66;">&#123;</span> background-image<span style="color: #3333ff;">:url</span><span style="color: #66cc66;">&#40;</span><span style="color: #ff0000;">'US.png'</span><span style="color: #66cc66;">&#41;</span>; <span style="color: #66cc66;">&#125;</span>
+<span style="color: #6666ff;">.country_NL</span> span <span style="color: #66cc66;">&#123;</span> background-image<span style="color: #3333ff;">:url</span><span style="color: #66cc66;">&#40;</span><span style="color: #ff0000;">'NL.png'</span><span style="color: #66cc66;">&#41;</span>; <span style="color: #66cc66;">&#125;</span>
+<span style="color: #6666ff;">.country_DE</span> span <span style="color: #66cc66;">&#123;</span> background-image<span style="color: #3333ff;">:url</span><span style="color: #66cc66;">&#40;</span><span style="color: #ff0000;">'DE.png'</span><span style="color: #66cc66;">&#41;</span>; <span style="color: #66cc66;">&#125;</span>
+&nbsp;
+<span style="color: #6666ff;">.color</span> span <span style="color: #66cc66;">&#123;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #333;">color</span>: <span style="color: #993333;">inherit</span> !important;
+<span style="color: #66cc66;">&#125;</span>
+&lt;/style&gt;
+&nbsp;</pre><pre class="html4strict"><span style="color: #009900;"><span style="color: #252525;">&lt;select</span> data-select&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #009900;"><span style="color: #252525;">&lt;optgroup</span> <span style="color: #000066;">label</span>=<span style="color: #ff0000;">&quot;Countries&quot;</span><span style="color: #252525;">&gt;</span></span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #009900;"><span style="color: #252525;">&lt;option</span> <span style="color: #000066;">value</span>=<span style="color: #ff0000;">&quot;us&quot;</span> <span style="color: #000066;">class</span>=<span style="color: #ff0000;">&quot;country country_US&quot;</span><span style="color: #252525;">&gt;</span></span>United Stated<span style="color: #009900;"><span style="color: #252525;">&lt;/option&gt;</span></span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #009900;"><span style="color: #252525;">&lt;option</span> <span style="color: #000066;">value</span>=<span style="color: #ff0000;">&quot;nl&quot;</span> <span style="color: #000066;">class</span>=<span style="color: #ff0000;">&quot;country country_NL&quot;</span><span style="color: #252525;">&gt;</span></span>Netherlands<span style="color: #009900;"><span style="color: #252525;">&lt;/option&gt;</span></span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #009900;"><span style="color: #252525;">&lt;option</span> <span style="color: #000066;">value</span>=<span style="color: #ff0000;">&quot;de&quot;</span> <span style="color: #000066;">class</span>=<span style="color: #ff0000;">&quot;country country_DE&quot;</span><span style="color: #252525;">&gt;</span></span>Germany<span style="color: #009900;"><span style="color: #252525;">&lt;/option&gt;</span></span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #009900;"><span style="color: #252525;">&lt;/optgroup&gt;</span></span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #009900;"><span style="color: #252525;">&lt;optgroup</span> <span style="color: #000066;">label</span>=<span style="color: #ff0000;">&quot;Colors&quot;</span><span style="color: #252525;">&gt;</span></span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #009900;"><span style="color: #252525;">&lt;option</span> <span style="color: #000066;">value</span>=<span style="color: #ff0000;">&quot;red&quot;</span> <span style="color: #000066;">class</span>=<span style="color: #ff0000;">&quot;color&quot;</span> <span style="color: #000066;">style</span>=<span style="color: #ff0000;">&quot;color:red&quot;</span><span style="color: #252525;">&gt;</span></span>Red<span style="color: #009900;"><span style="color: #252525;">&lt;/option&gt;</span></span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #009900;"><span style="color: #252525;">&lt;option</span> <span style="color: #000066;">value</span>=<span style="color: #ff0000;">&quot;green&quot;</span> <span style="color: #000066;">class</span>=<span style="color: #ff0000;">&quot;color&quot;</span> <span style="color: #000066;">style</span>=<span style="color: #ff0000;">&quot;color:green&quot;</span><span style="color: #252525;">&gt;</span></span>Green<span style="color: #009900;"><span style="color: #252525;">&lt;/option&gt;</span></span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #009900;"><span style="color: #252525;">&lt;option</span> <span style="color: #000066;">value</span>=<span style="color: #ff0000;">&quot;blue&quot;</span> <span style="color: #000066;">class</span>=<span style="color: #ff0000;">&quot;color&quot;</span> <span style="color: #000066;">style</span>=<span style="color: #ff0000;">&quot;color:blue&quot;</span><span style="color: #252525;">&gt;</span></span>Blue<span style="color: #009900;"><span style="color: #252525;">&lt;/option&gt;</span></span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #009900;"><span style="color: #252525;">&lt;/optgroup&gt;</span></span>
+<span style="color: #009900;"><span style="color: #252525;">&lt;/select&gt;</span></span></pre><select data-select="{autoPosition:false}" style="position:absolute; right:10px; top:10px; width:200px;">
+	<optgroup label="Countries">
+	<option value="us" class="country country_US">United Stated</option>
+	<option value="nl" class="country country_NL">Netherlands</option>
+	<option value="de" class="country country_DE">Germany</option>
+	</optgroup>
+	<optgroup label="Colors">
+	<option value="red" class="color" style="color:red">Red</option>
+	<option value="green" class="color" style="color:green">Green</option>
+	<option value="blue" class="color" style="color:blue">Blue</option>
+	</optgroup>
+</select></div><style type="text/css">
+.country span {
+	background-position: 10px 5px;
+	background-repeat: no-repeat;
+	text-indent: 28px;
+}
+.country_US span {
+	background-image:url('assets/img/flags/US.png');
+}
+.country_NL span {
+	background-image:url('assets/img/flags/NL.png');
+}
+.country_DE span {
+	background-image:url('assets/img/flags/DE.png');
+}
+.color span {
+	color: inherit !important;
+}
+</style>
+
+<p>
+Notice that styles should be applied to <tt class="bg">span</tt>, as this is the last element in the option.
+</p>
+
+<h2>Options</h2>
+
+<p>
+This is the complete list of options you can set for mForm.Element.Select:
+</p>
+
+
+<table class="options_table">
+<tr>
+<td class="option">
+<div class=""><pre class="javascript">original: <span style="color: #003366; font-weight: bold;">null</span>,</pre></div></td>
+<td class="description">
+The element id or element reference of the select field to replace.
+</td>
+</tr>
+
+<tr>
+<td class="option">
+<div class=""><pre class="javascript">placeholder: <span style="color: #3366CC;">''</span>,</pre></div></td>
+<td class="description">
+The default placeholder of your select field.
+</td>
+</tr>
+
+<tr>
+<td class="option">
+<div class=""><pre class="javascript">placeholderSearch:
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #3366CC;">'Search...'</span>,</pre></div></td>
+<td class="description">
+The default placeholder of the search field.
+</td>
+</tr>
+
+<tr>
+<td class="option">
+<div class=""><pre class="javascript">noSearchResults:
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #3366CC;">'No options found...'</span>,</pre></div></td>
+<td class="description">
+The notice when no search results have been found.
+</td>
+</tr>
+
+<tr>
+<td class="option">
+<div class=""><pre class="javascript">noOptions:
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #3366CC;">'There are no options...'</span>,</pre></div></td>
+<td class="description">
+The notice when there are no options to select.
+</td>
+</tr>
+
+<tr>
+<td class="option">
+<div class=""><pre class="javascript">search: <span style="color: #CC0000;">20</span>,</pre></div></td>
+<td class="description">
+This many options are neccessary for the search field to appear.<br>Set to <tt class="bg">true</tt> to always display the search field, or <tt class="bg">false</tt> to disable the search.
+</td>
+</tr>
+
+<tr>
+<td class="option">
+<div class=""><pre class="javascript">max: <span style="color: #CC0000;">20</span>,</pre></div></td>
+<td class="description">
+The maximum amount of options to be shown, others will show when scrolling.
+</td>
+</tr>
+
+<tr>
+<td class="option">
+<div class=""><pre class="javascript">maxBuffer: <span style="color: #CC0000;">3</span>,</pre></div></td>
+<td class="description">
+Only if <tt><tt class="bg">max</tt> + <tt class="bg">maxBuffer</tt> > options</tt>, the options will be hidden and scrolling will be enabled
+</td>
+</tr>
+
+<tr>
+<td class="option">
+<div class=""><pre class="javascript">focusSearch: <span style="color: #003366; font-weight: bold;">false</span>,</pre></div></td>
+<td class="description">
+Automatically sets the focus to the search field when opening the options.
+</td>
+</tr>
+
+<tr>
+<td class="option">
+<div class=""><pre class="javascript">position: <span style="color: #3366CC;">'bottom'</span>,</pre></div></td>
+<td class="description">
+The position of the options container.
+Can be <tt class="bg">'top'</tt> to fade the container on top of the select field or <tt class="bg">'bottom'</tt> to use the dropdown effect.
+</td>
+</tr>
+
+<tr>
+<td class="option">
+<div class=""><pre class="javascript">tween: <span style="color: #3366CC;">'height'</span>,</pre></div></td>
+<td class="description">
+Can be <tt class="bg">'opacity'</tt> (fade effect) or <tt class="bg">'height'</tt> (dropdown effect, works only if <tt><tt class="bg">position</tt> == <tt class="bg">'bottom'</tt></tt>).
+</td>
+</tr>
+
+<tr>
+<td class="option">
+<div class=""><pre class="javascript">autoPosition: <span style="color: #003366; font-weight: bold;">true</span>,</pre></div></td>
+<td class="description">
+Adjusts the position of the options container if there is not enough space availible to show all options.
+</td>
+</tr>
+
+<tr>
+<td class="option">
+<div class=""><pre class="javascript">windowOffset: <span style="color: #CC0000;">10</span>,</pre></div></td>
+<td class="description">
+Minimal distance of the options container to the window edges.
+</td>
+</tr>
+
+<tr>
+<td class="option">
+<div class=""><pre class="javascript">scrollSpeed: <span style="color: #CC0000;">100</span>,</pre></div></td>
+<td class="description">
+Scrolling duration for one option.
+</td>
+</tr>
+
+<tr>
+<td class="option">
+<div class=""><pre class="javascript">scrollFast: <span style="color: #CC0000;">30</span>,</pre></div></td>
+<td class="description">
+Scrolling duration for one option when scrolling fast, e.g. klicking on down or up button.
+</td>
+</tr>
+
+<tr>
+<td class="option">
+<div class=""><pre class="javascript">scrollWheelSpeed: <span style="color: #CC0000;">30</span>,</pre></div></td>
+<td class="description">
+Scrolling duration for one option when using the mouse wheel.
+</td>
+</tr>
+
+<tr>
+<td class="option">
+<div class=""><pre class="javascript">scrollWheelStep: <span style="color: #CC0000;">3</span>,</pre></div></td>
+<td class="description">
+This many options will be scrolled with one scroll wheel step.
+</td>
+</tr>
+
+<tr>
+<td class="option">
+<div class=""><pre class="javascript">dropdownDuration: <span style="color: #CC0000;">250</span>,</pre></div></td>
+<td class="description">
+How fast the options menu drops down or tweens back.
+</td>
+</tr>
+
+<tr>
+<td class="option">
+<div class=""><pre class="javascript">fadeDuration: <span style="color: #CC0000;">250</span>,</pre></div></td>
+<td class="description">
+How fast the options menu fades when it is opened on top of select field.
+</td>
+</tr>
+
+<tr>
+<td class="option">
+<div class=""><pre class="javascript">removeSelected: <span style="color: #003366; font-weight: bold;">true</span>,</pre></div></td>
+<td class="description">
+Set to <tt class="bg">false</tt> to disallow deselecting an option.
+</td>
+</tr>
+
+<tr>
+<td class="option">
+<div class=""><pre class="javascript">zIndex: <span style="color: #CC0000;">2000</span>,</pre></div></td>
+<td class="description">
+The zIndex of the select field. It should be high to make sure it will be above all your other absolute positioned elements.
+</td>
+</tr>
+
+</table>
+
+
+</div>
+</div>
+
+</body>
+</html>
