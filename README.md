@@ -1,10 +1,7 @@
-Notice
-======
-I've abandoned this project and moved to jQuery. There won't be any more updates.
-
-
 mForm
------
+=====
+
+**Please note: I've abandoned this project and moved to jQuery. There won't be any more updates.**
 
 mForm helps you to make your forms and form elements nicer, better and more awesome.
 
